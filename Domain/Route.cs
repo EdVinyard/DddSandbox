@@ -10,6 +10,13 @@ namespace Domain
     public class Location
     {
         /// <summary>
+        /// A Location that does not exist.
+        /// </summary>
+        public static readonly Location Nowhere = new Location(
+            "nowhere", 
+            GeoCoordinate.Unknown);
+
+        /// <summary>
         /// The text by which a human would identify (and communicate) the
         /// identity of this location.
         /// </summary>
@@ -33,15 +40,19 @@ namespace Domain
     /// </summary>
     public class Waypoint
     {
+        public virtual int WaypointId { get; set; }
+
         /// <summary>
         /// The range of time during which the Location must be reached.
         /// </summary>
-        public TimeRange Time { get; private set; }
+        public virtual TimeRange Time { get; protected set; }
 
         /// <summary>
         /// A place that is part of a 
         /// </summary>
-        public Location Place { get; private set; }
+        public virtual Location Place { get; protected set; }
+
+        public Waypoint() : this(Location.Nowhere, TimeRange.Never) { }
 
         public Waypoint(Location place, TimeRange time)
         {
