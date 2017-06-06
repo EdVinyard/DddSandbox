@@ -8,6 +8,14 @@ namespace Domain
     public class TimeRange
     {
         /// <summary>
+        /// An unsatisfiable TimeRange, such that there are no instants in time
+        /// that are included in the range.
+        /// </summary>
+        public static readonly TimeRange Never = new TimeRange(
+            DateTimeOffset.MinValue, 
+            TimeSpan.Zero);
+
+        /// <summary>
         /// <para>
         /// Create a new TimeRange instance with the specified anchor and 
         /// duration.  The duration may be either positive or negative, but the
