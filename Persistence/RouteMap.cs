@@ -1,7 +1,14 @@
-﻿namespace Persistence
+﻿using Domain;
+using FluentNHibernate.Mapping;
+
+namespace Persistence
 {
-    internal class RouteMap
+    internal class RouteMap : ClassMap<Route>
     {
-        // STARTHERE
+        public RouteMap()
+        {
+            Id(x => x.RouteId);
+            Map(x => x.Label);
+        }
     }
 }

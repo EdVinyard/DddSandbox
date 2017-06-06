@@ -4,7 +4,7 @@ using System.Configuration;
 
 namespace Persistence
 {
-    class Config
+    public class Config
     {
         public static FluentConfiguration Database { get { return MsSqlDatabase; } }
 
@@ -21,7 +21,7 @@ namespace Persistence
         }
 
         private static readonly ConnectionStringSettings MsSqlDbConnectionString =
-            ConfigurationManager.ConnectionStrings["UnitOfWorkTest"];
+            ConfigurationManager.ConnectionStrings["DddExample"];
 
         protected static FluentConfiguration MsSqlDatabase
         {

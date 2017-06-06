@@ -36,17 +36,17 @@ namespace Domain
         /// <summary>
         /// The range of time during which the Location must be reached.
         /// </summary>
-        public TimeRange TimeRange { get; private set; }
+        public TimeRange Time { get; private set; }
 
         /// <summary>
         /// A place that is part of a 
         /// </summary>
-        public Location Location { get; private set; }
+        public Location Place { get; private set; }
 
-        public Waypoint(Location l, TimeRange t)
+        public Waypoint(Location place, TimeRange time)
         {
-            Location = l;
-            TimeRange = t;
+            Place = place;
+            Time = time;
         }
     }
 
@@ -57,11 +57,33 @@ namespace Domain
     /// </summary>
     public class Route
     {
-        public IReadOnlyList<Waypoint> Waypoints { get; private set; }
+        public virtual int RouteId { get; protected set; }
 
-        public Route(IEnumerable<Waypoint> waypoints)
+        private string _label;
+        public virtual string Label
         {
-            Waypoints = new List<Waypoint>(waypoints);
+            get { return _label; }
+            protected set { _label = value ?? string.Empty; }
+        }
+
+        private IReadOnlyList<Waypoint> _waypoints;
+        public virtual IReadOnlyList<Waypoint> Waypoints
+        {
+            get { return _waypoints; }
+            protected set { _waypoints = value ?? new List<Waypoint>(0); }
+        }
+
+        /// <summary>
+        /// FOR NHibernate USE ONLY!
+        /// </summary>
+        protected Route() : this(null, null) { }
+
+        public Route(
+            string label,
+            IEnumerable<Waypoint> waypoints)
+        {
+            _label = label ?? string.Empty;
+            _waypoints = new List<Waypoint>(waypoints ?? new Waypoint[0]);
         }
     }
 }
