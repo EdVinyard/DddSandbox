@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -61,11 +62,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DatabaseConnectionTest.cs" />
     <Compile Include="DatabaseTest.cs" />
     <Compile Include="DependencyInjectionContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WaypointTest.cs" />
-    <Compile Include="RouteTest.cs" />
+    <Compile Include="ReverseAuctionTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

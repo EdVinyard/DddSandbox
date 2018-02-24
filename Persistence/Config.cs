@@ -1,5 +1,6 @@
 ﻿using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
+using NHibernate.Tool.hbm2ddl;
 using System.Configuration;
 
 namespace Persistence
@@ -20,8 +21,10 @@ namespace Persistence
             }
         }
 
-        private static readonly ConnectionStringSettings MsSqlDbConnectionString =
+        private static readonly ConnectionStringSettings MsSqlDb =
             ConfigurationManager.ConnectionStrings["DddExample"];
+
+        internal static string MsSqlDbConnectionString => MsSqlDb.ConnectionString;
 
         protected static FluentConfiguration MsSqlDatabase
         {
@@ -29,7 +32,7 @@ namespace Persistence
             {
                 var msSqlConfiguration = MsSqlConfiguration
                     .MsSql2012
-                    .ConnectionString(MsSqlDbConnectionString.ConnectionString);
+                    .ConnectionString(MsSqlDbConnectionString);
 
                 if (ShowSql)
                 {
@@ -41,7 +44,10 @@ namespace Persistence
                 return Fluently.Configure()
                     .Database(msSqlConfiguration)
                     .Mappings(m => m.FluentMappings
-                        .AddFromAssemblyOf<RouteMap>());
+                        .AddFromAssemblyOf<NHibernateMappingMarker>())
+                    .ExposeConfiguration(c => new SchemaExport(c).Create(
+                        useStdOut: false, 
+                        execute: true));
             }
         }
     }

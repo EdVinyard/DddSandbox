@@ -43,11 +43,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aggregate.cs" />
+    <Compile Include="Aggregate\Auction\Bid.cs" />
+    <Compile Include="Aggregate\Auction\Location.cs" />
+    <Compile Include="Aggregate\Auction\ReverseAuction.cs" />
+    <Compile Include="Aggregate\Auction\Terms.cs" />
+    <Compile Include="Aggregate\Auction\Waypoint.cs" />
+    <Compile Include="Aggregate\Money.cs" />
+    <Compile Include="Entity.cs" />
+    <Compile Include="InterAggregateEvent.cs" />
+    <Compile Include="Port\IClock.cs" />
+    <Compile Include="Port\IGeocoder.cs" />
     <Compile Include="Precondition.cs" />
-    <Compile Include="Route.cs" />
-    <Compile Include="TimeRange.cs" />
+    <Compile Include="Aggregate\Auction\TimeRange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service.cs" />
     <Compile Include="TimeSpanX.cs" />
+    <Compile Include="ValueType.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Aggregate\Reputation\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

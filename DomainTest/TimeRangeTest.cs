@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Domain.Aggregate.Auction;
 using NUnit.Framework;
-using Domain;
+using System;
 
 namespace DomainTest
 {

@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 
-namespace Domain
+namespace Domain.Aggregate.Auction
 {
     /// <summary>
     /// An immutable "window" of time, with a specific start and end time.
     /// </summary>
-    public class TimeRange
+    public class TimeRange : IEquatable<TimeRange>
     {
         /// <summary>
         /// An unsatisfiable TimeRange, such that there are no instants in time
@@ -80,6 +81,11 @@ namespace Domain
         }
 
         /// <summary>
+        /// FOR NHibernate and Terms.Constructor ONLY!
+        /// </summary> 
+        protected TimeRange() { }
+
+        /// <summary>
         /// The earliest time included in the range.  For a time range that 
         /// covers 1:00 PM until 2:00 PM, this is 1:00 PM.  Always earlier
         /// than or equal to <c>End</c>.
@@ -117,6 +123,32 @@ namespace Domain
             }
             
             return (Start <= dateTime) && (dateTime < End);
+        }
+
+        public override bool Equals(object otherObj)
+        {
+            if (null == otherObj) return false;
+            if (ReferenceEquals(this, otherObj)) return true;
+            var otherTimeRange = otherObj as TimeRange;
+            if (null == otherTimeRange) return false;
+            return this.Equals(otherTimeRange);
+        }
+
+        public bool Equals(TimeRange other)
+        {
+            return (Start == other.Start)
+                && (Duration == other.Duration);
+        }
+
+        public static bool operator ==(TimeRange l, TimeRange r) => Object.Equals(l, r);
+        public static bool operator !=(TimeRange l, TimeRange r) => !(l == r);
+
+        public override int GetHashCode()
+        {
+            var hashCode = -1589446268;
+            hashCode = hashCode * -1521134295 + EqualityComparer<DateTimeOffset>.Default.GetHashCode(Start);
+            hashCode = hashCode * -1521134295 + EqualityComparer<TimeSpan>.Default.GetHashCode(Duration);
+            return hashCode;
         }
     }
 }
