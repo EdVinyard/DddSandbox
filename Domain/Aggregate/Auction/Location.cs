@@ -11,6 +11,12 @@ namespace Domain.Aggregate.Auction
     /// </summary>
     public class Location : ValueType
     {
+        // RULE: Value Types MAY either be instantiated using a traditional
+        // constructor, or a class-scoped Factory, whichever is appropriate.
+        // Choose a Factory when construction has external dependencies.
+        // In the case of Location, an external Geocoder is needed to find
+        // coorindates given a human-readable street address.
+
         // We could create a constructor here, but if instantiation
         // requires dependencies outside this Domain Type, it's better
         // to put *all* the preconditions, validation, and construction
@@ -45,14 +51,15 @@ namespace Domain.Aggregate.Auction
         /// A stateless Domain Service that creates instances of the Address
         /// Domain Entity.
         /// <summary>
-        public class Constructor : Service
+        public class Factory : Service
         {
             private readonly IGeocoder _geocoder;
 
-            public Constructor(IGeocoder geocoder)
+            public Factory(IGeocoder geocoder)
             {
                 _geocoder = geocoder;
             }
+
 
             public Location New(string address)
             {
@@ -64,8 +71,11 @@ namespace Domain.Aggregate.Auction
                 }
 
                 var coordinates = _geocoder.GeoCode(address);
-                // Here, perhaps require that these be coordiantes of some quality,
-                // precision, or within some service area.
+                // This is a relatively simple implementation, but we 
+                // could get fancier here.  For example we might pass 
+                // in some constraint that requires the address be 
+                // geocode -able with a certain precision (e.g., when 
+                // a postal code centroid isn't good enough).
 
                 return new Location
                 {

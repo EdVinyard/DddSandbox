@@ -9,11 +9,11 @@ namespace Domain.Aggregate.Auction
         /// <summary>
         /// A stateless Domain Service that creates instances of Terms.
         /// <summary>
-        public class Constructor : Service
+        public class Factory : Service
         {
             private readonly IClock _clock;
 
-            public Constructor(IClock clock) { _clock = clock;  }
+            public Factory(IClock clock) { _clock = clock;  }
 
             public Terms New(Waypoint pickup, Waypoint dropoff, string otherTerms)
             {
@@ -53,7 +53,7 @@ namespace Domain.Aggregate.Auction
         }
 
         /// <summary>
-        /// FOR NHibernate and Terms.Constructor ONLY!
+        /// FOR NHibernate and Terms.Factory ONLY!
         /// </summary>        
         protected Terms() { }
 

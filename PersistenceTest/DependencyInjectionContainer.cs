@@ -5,10 +5,10 @@ using System;
 
 namespace PersistenceTest
 {
-    public static class DependencyInjectionContainer
+    public class DependencyInjectionContainer
     {
-        private static IContainer _instance;
-        public static IContainer Instance
+        private IContainer _instance;
+        public IContainer Instance
         {
             get
             {
@@ -23,16 +23,14 @@ namespace PersistenceTest
             private set { _instance = value; }
         }
 
-        public static void SetUp()
+        public void SetUp(Action<ConfigurationExpression> configure = null)
         {
             Instance = new Container(x =>
             {
                 x.For<NHibernate.ISessionFactory>()
                     .Use(ctx => Config.Database.BuildSessionFactory())
                     .Singleton();
-                x.For<NHibernate.ISession>()
-                    .LifecycleIs(new ThreadLocalStorageLifecycle())
-                    .Use(ctx => ctx.GetInstance<NHibernate.ISessionFactory>().OpenSession());
+                configure?.Invoke(x);
             });
 
             System.Console.WriteLine(Instance.WhatDoIHave());

@@ -1,6 +1,7 @@
 ﻿using Domain.Aggregate.Auction;
 using Domain.Port;
 using NUnit.Framework;
+using StructureMap;
 using System;
 using System.Device.Location;
 
@@ -9,12 +10,6 @@ namespace PersistenceTest
     [TestFixture]
     public class ReverseAuctionTest : DatabaseTest
     {
-        private FakeClock Clock;
-        private FakeGeocoder Geocoder;
-        private Terms.Constructor TermsConstructor;
-        private ReverseAuction.Constructor ReverseAuctionConstructor;
-        private Location.Constructor LocationConstructor;
-
         public class FakeGeocoder : IGeocoder
         {
             public override GeoCoordinate GeoCode(string address)
@@ -35,36 +30,38 @@ namespace PersistenceTest
                 TimeSpan.FromHours(1));
         }
 
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
+        protected override void Configure(ConfigurationExpression c)
         {
-            // TODO: Real dependency injection.
-            Clock = new FakeClock();
-            Geocoder = new FakeGeocoder();
-            TermsConstructor = new Terms.Constructor(Clock);
-            ReverseAuctionConstructor = new ReverseAuction.Constructor(Clock);
-            LocationConstructor = new Location.Constructor(Geocoder);
+            c.For<IClock>().Use<FakeClock>();
+            c.For<IGeocoder>().Use<FakeGeocoder>();
         }
+
+        Location.Factory LocationFactory => Container.GetInstance<Location.Factory>();
+        IClock Clock => Container.GetInstance<IClock>();
+        Terms.Factory TermsFactory => Container.GetInstance<Terms.Factory>();
+        ReverseAuction.Factory ReverseAuctionFactory => 
+            Container.GetInstance<ReverseAuction.Factory>();
 
         [Test]
         public void Should_round_trip()
         {
             // Arrange
-            var here = LocationConstructor.New("right here");
-            var there = LocationConstructor.New("way over there");
+            var locationFactory = Container.GetInstance<Location.Factory>();
+            var here = LocationFactory.New("right here");
+            var there = LocationFactory.New("way over there");
             var withinOneHour   = new TimeRange(Clock.Now, TimeSpan.FromHours(1));
             var withinTwoHours  = new TimeRange(Clock.Now, TimeSpan.FromHours(2));
             var nextFiveMinutes = new TimeRange(Clock.Now, TimeSpan.FromMinutes(5));
             var pickup = new Waypoint(here, withinOneHour);
             var dropoff = new Waypoint(there, withinTwoHours);
-            var expected = ReverseAuctionConstructor.New(
-                TermsConstructor.New(pickup, dropoff, "no extra terms"),
+            var expected = ReverseAuctionFactory.New(
+                TermsFactory.New(pickup, dropoff, "no extra terms"),
                 biddingAllowed: nextFiveMinutes);
 
             // Act
-            DbSession.Save(expected);
-            DbSession.Evict(expected);
-            var actual = DbSession.Get<ReverseAuction>(expected.Id);
+            Session.Save(expected);
+            Session.Evict(expected);
+            var actual = Session.Get<ReverseAuction>(expected.Id);
 
             // Assert
             Assert.NotNull(actual);

@@ -3,6 +3,17 @@ using System.Collections.Generic;
 
 namespace Domain.Aggregate.Auction
 {
+    // RULE: Any value type that is used by more than one
+    // aggregate should be "promoted" to some common area to make
+    // it clear that it is, e.g., a generic TimeRange rather than
+    // specifically a ReverseAuction.TimeRange.  In general Value
+    // Types should be more generically constructed than Entities,
+    // because they're lower-level concepts and more likely to be
+    // broadly applicable or useful.  The degenerate example of this
+    // are the bulit-in types: int, string, etc. that'll be used
+    // everywhere, but also DateTimeOffset, TimeSpan, other such
+    // general concepts.
+
     /// <summary>
     /// An immutable "window" of time, with a specific start and end time.
     /// </summary>
