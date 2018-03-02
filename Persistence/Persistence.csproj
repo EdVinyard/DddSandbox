@@ -68,6 +68,7 @@
     <Compile Include="DatabaseSessionFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NHibernateMappings.cs" />
+    <Compile Include="ReverseAuctionRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Schema.sql" />
@@ -76,6 +77,10 @@
     <ProjectReference Include="..\Domain\Domain.csproj">
       <Project>{94c2332d-13d4-46c9-b32e-1a9beb80d901}</Project>
       <Name>Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework\Framework.csproj">
+      <Project>{e0453b9c-810c-4397-a662-e2ec5788c56b}</Project>
+      <Name>Framework</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

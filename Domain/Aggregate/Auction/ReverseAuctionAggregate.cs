@@ -5,6 +5,19 @@
     // root Entity name seem to be the same thing.
     public class ReverseAuctionAggregate
     {
+        // TODO: Vernor *specifically* advises against allowing
+        // Aggregates to have Domain Service and Repository 
+        // dependencies.  But I can't see how to provide for complex
+        // construction of Aggregate components without them.
+        // Even passing dependencies in is advocated.  In this case,
+        // I think that would mean that every client must orchestrate
+        // the construction of, e.g., Locations.  That implies that the
+        // constructed location must retain enough information about the
+        // constraints under which it was constructed that we can verify
+        // it after-the-fact (as opposed to this implementation which allows
+        // us to direct the behavior of Location.Factory directly and 
+        // uniformly.
+
         private Location.Factory _locationFactory;
         private ReverseAuction.Factory _reverseAuctionFactory;
         private Terms.Factory _termsFactory;
@@ -57,7 +70,8 @@
             // only published when the transaction is committed.  
             // However, if the consistency boundary IS the aggregate,
             // it may not be reasonable to wait.
-            _interAggregateEventBus.Publish(new Event.ReverseAuctionCreated(auction));
+            _interAggregateEventBus.Publish(
+                new Event.ReverseAuctionCreated(auction));
 
             return auction;
         }
