@@ -1,6 +1,7 @@
 ﻿using Domain.Port;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Domain.Aggregate.Auction
 {
@@ -65,7 +66,6 @@ namespace Domain.Aggregate.Auction
         protected ReverseAuction() { }
 
         public virtual Terms BuyerTerms { get; protected set; }
-
         /// <summary>
         /// TODO: Based on the concurrency requirements described by the
         /// Implementing DDD book Aggregate chapter, I'm not sure if it's

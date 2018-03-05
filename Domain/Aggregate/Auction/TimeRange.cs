@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Domain.Aggregate.Auction
 {
@@ -128,13 +129,33 @@ namespace Domain.Aggregate.Auction
         {
             if (TimeSpan.Zero == Duration)
             {
-                // When the TimeRange is only a single moment in time, it 
-                // should still include that one moment.
+                // a single instant
                 return Start == dateTime;
             }
-            
-            return (Start <= dateTime) && (dateTime < End);
+
+            // an extended window
+            return (Start <= dateTime) && (dateTime < End); 
         }
+
+        //// parameters
+        //var dateTime = Expression.Parameter(typeof(DateTime));
+        //var timeRange = Expression.Parameter(typeof(TimeRange));
+
+        //// derived
+        //var duration = Expression.Field(timeRange, nameof(Duration));
+        //var start = Expression.Field(timeRange, nameof(Start));
+        //var end = Expression.Field(timeRange, nameof(End));
+        //var zero = Expression.Constant(TimeSpan.Zero);
+
+        //return Expression.Or(
+        //    Expression.And(
+        //        // When the TimeRange is only a single moment in time, it 
+        //        // should still include that one moment.
+        //        Expression.Equal(zero, duration),
+        //        Expression.Equal(start, dateTime)),
+        //    Expression.And(
+        //        Expression.LessThanOrEqual(start, dateTime),
+        //        Expression.LessThan(dateTime, end)));
 
         public override bool Equals(object otherObj)
         {

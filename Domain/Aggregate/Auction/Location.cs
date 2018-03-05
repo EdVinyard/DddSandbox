@@ -60,7 +60,6 @@ namespace Domain.Aggregate.Auction
                 _geocoder = geocoder;
             }
 
-
             public Location New(string address)
             {
                 if (string.IsNullOrWhiteSpace(address))

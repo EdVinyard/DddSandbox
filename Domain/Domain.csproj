@@ -36,21 +36,16 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Device" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Aggregate.cs" />
     <Compile Include="Aggregate\Auction\Bid.cs" />
+    <Compile Include="Aggregate\Auction\IReverseAuctionRepository.cs" />
     <Compile Include="Aggregate\Auction\ReverseAuctionCreated.cs" />
     <Compile Include="Aggregate\Auction\Location.cs" />
     <Compile Include="Aggregate\Auction\ReverseAuction.cs" />
     <Compile Include="Aggregate\Auction\ReverseAuctionAggregate.cs" />
-    <Compile Include="Aggregate\Auction\ReverseAuctionRepository.cs" />
     <Compile Include="Aggregate\Auction\Terms.cs" />
     <Compile Include="Aggregate\Auction\Waypoint.cs" />
     <Compile Include="Aggregate\Money.cs" />

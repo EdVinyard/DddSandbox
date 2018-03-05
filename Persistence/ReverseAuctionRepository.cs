@@ -1,7 +1,9 @@
 ﻿using Domain.Aggregate.Auction;
 using Framework;
 using NHibernate;
+using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Persistence
 {
@@ -14,28 +16,42 @@ namespace Persistence
             this.session = session;
         }
 
-        public ReverseAuction Save(ReverseAuction ra)
+        public ReverseAuctionAggregate Save(ReverseAuctionAggregate ra)
         {
-            return (ReverseAuction)this.session.Save(ra);
-        }
-
-        public ReverseAuction Update(ReverseAuction ra)
-        {
-            this.session.Update(ra);
+            this.session.Save(ra.Root);
             return ra;
         }
 
-        public ReverseAuction Get(int id)
+        public ReverseAuctionAggregate Update(ReverseAuctionAggregate ra)
         {
-            return this.session.Get<ReverseAuction>(id);
+            this.session.Update(ra.Root);
+            return ra;
         }
 
-        public IReadOnlyList<ReverseAuction> GetRecent(
+        public ReverseAuctionAggregate Get(int id)
+        {
+            return new ReverseAuctionAggregate(
+                this.session.Get<ReverseAuction>(id));
+        }
+
+        /// <summary>
+        /// Returns all ReverseAuctions open for Bidding at the specified time.
+        /// </summary>
+        public IReadOnlyList<ReverseAuction> GetLive(
+            DateTimeOffset dt,
             int pageSize, 
             int pageIndex)
         {
             return this.session
                 .QueryOver<ReverseAuction>()
+                .Where(ra =>
+                    // TODO: prove this is equivalent to TimeRange.Includes()
+                    // or factor out this logic (e.g., a common Expression).
+                    (ra.BiddingAllowed.Duration == TimeSpan.Zero
+                    && ra.BiddingAllowed.Start == dt) 
+                    ||
+                    (ra.BiddingAllowed.Start <= dt
+                    && dt < ra.BiddingAllowed.End))
                 .OrderBy(ra => ra.Id)
                 .Desc
                 .Take(pageSize)

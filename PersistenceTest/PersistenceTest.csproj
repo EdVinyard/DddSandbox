@@ -74,6 +74,7 @@
     <Compile Include="DatabaseTest.cs" />
     <Compile Include="DependencyInjectionContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReverseAuctionAggreate\Factory.cs" />
     <Compile Include="ReverseAuctionTest.cs" />
   </ItemGroup>
   <ItemGroup>
