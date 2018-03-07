@@ -1,6 +1,6 @@
 ﻿namespace Domain.Aggregate.Auction.Event
 {
-    public class ReverseAuctionCreated : InterAggregateEvent 
+    public class ReverseAuctionEvent : InterAggregateEvent
     {
         public int Id { get; }
 
@@ -9,10 +9,20 @@
         /// only be constructed within the Domain project.  Nothing outside 
         /// the Domain should ever publish or create one.
         /// </summary>
-        internal ReverseAuctionCreated(ReverseAuctionAggregate created)
+        internal ReverseAuctionEvent(ReverseAuctionAggregate created)
         {
             Precondition.MustNotBeNull(created, nameof(created));
             Id = created.Id;
         }
+    }
+
+    public class ReverseAuctionCreated : ReverseAuctionEvent
+    {
+        internal ReverseAuctionCreated(ReverseAuctionAggregate x) : base(x) { }
+    }
+
+    public class BuyerTermsChanged : ReverseAuctionEvent
+    {
+        internal BuyerTermsChanged(ReverseAuctionAggregate x) : base(x) { }
     }
 }

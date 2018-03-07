@@ -88,5 +88,11 @@ namespace Domain.Aggregate.Auction
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(OtherTerms);
             return hashCode;
         }
+
+        // TODO: How do we force client code to use the Aggregate service instead of this method?
+        internal void ChangePickup(Location pickup)
+        {
+            Pickup = new Waypoint(pickup, Pickup.Time);
+        }
     }
 }

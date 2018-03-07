@@ -16,7 +16,6 @@ namespace PersistenceTest
                     .Singleton();
             });
         }
-
         /// <summary>
         /// a root-level DI Container, constructed once for ALL instances of
         /// DatabaseTest

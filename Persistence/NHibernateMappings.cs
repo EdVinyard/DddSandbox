@@ -11,6 +11,12 @@ namespace Persistence
         public ReverseAuctionMap()
         {
             Id(x => x.Id);
+
+            OptimisticLock.Version();
+            Version(x => x.Version)
+                .Not.Nullable()
+                .UnsavedValue("0");
+
             Component(x => x.BuyerTerms).ColumnPrefix("BuyerTerms_");
             Component(x => x.BiddingAllowed).ColumnPrefix("BiddingAllowed_");
             //HasMany(x => x.Bids); // Not if Bids belong in a separate aggregate!

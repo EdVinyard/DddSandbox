@@ -7,6 +7,7 @@
     {
         internal ReverseAuction Root { get; private set; }
         public int Id => Root.Id;
+        internal int Version => Root.Version; // TODO: Remove this?
         public Terms BuyerTerms => Root.BuyerTerms;
         public TimeRange BiddingAllowed => Root.BiddingAllowed;
 
@@ -70,6 +71,32 @@
 
                 _interAggregateEventBus.Publish(
                     new Event.ReverseAuctionCreated(aggregate));
+
+                return aggregate;
+            }
+        }
+
+        public class AlterPickupLocation : Service
+        {
+            private Location.Factory _locationFactory;
+            private IInterAggregateEventBus _interAggregateEventBus;
+
+            public AlterPickupLocation(
+                Location.Factory locationFactory,
+                IInterAggregateEventBus interAggregateEventBus)
+            {
+                _locationFactory = locationFactory;
+                _interAggregateEventBus = interAggregateEventBus;
+            }
+
+            public ReverseAuctionAggregate ChangePickup(
+                ReverseAuctionAggregate aggregate, 
+                string pickupAddress)
+            {
+                var pickup = _locationFactory.New(pickupAddress);
+                aggregate.Root.BuyerTerms.ChangePickup(pickup);
+
+                _interAggregateEventBus.Publish(new Event.BuyerTermsChanged(aggregate));
 
                 return aggregate;
             }

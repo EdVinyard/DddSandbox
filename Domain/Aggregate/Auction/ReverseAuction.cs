@@ -9,7 +9,7 @@ namespace Domain.Aggregate.Auction
     /// An auction in which one or more sellers vie to supply a service
     /// to a buyer.
     /// </summary>
-    public class ReverseAuction : Entity
+    public class ReverseAuction : AggregateRoot
     {
         // RULE: Entities must always be constructed using a stateless 
         // "factory service".  They should expose exactly one, 
@@ -66,6 +66,7 @@ namespace Domain.Aggregate.Auction
         protected ReverseAuction() { }
 
         public virtual Terms BuyerTerms { get; protected set; }
+
         /// <summary>
         /// TODO: Based on the concurrency requirements described by the
         /// Implementing DDD book Aggregate chapter, I'm not sure if it's

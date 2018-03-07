@@ -40,9 +40,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Aggregate.cs" />
+    <Compile Include="AggregateRoot.cs" />
     <Compile Include="Aggregate\Auction\Bid.cs" />
     <Compile Include="Aggregate\Auction\IReverseAuctionRepository.cs" />
-    <Compile Include="Aggregate\Auction\ReverseAuctionCreated.cs" />
+    <Compile Include="Aggregate\Auction\Event.cs" />
     <Compile Include="Aggregate\Auction\Location.cs" />
     <Compile Include="Aggregate\Auction\ReverseAuction.cs" />
     <Compile Include="Aggregate\Auction\ReverseAuctionAggregate.cs" />
