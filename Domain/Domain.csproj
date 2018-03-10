@@ -54,6 +54,7 @@
     <Compile Include="InterAggregateEvent.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="Port\IClock.cs" />
+    <Compile Include="Port\IDependencies.cs" />
     <Compile Include="Port\IGeocoder.cs" />
     <Compile Include="Precondition.cs" />
     <Compile Include="Aggregate\Auction\TimeRange.cs" />

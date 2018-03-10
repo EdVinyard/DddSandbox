@@ -47,12 +47,20 @@ namespace PersistenceTest
             }
         }
 
+        public class StructureMapAdapter : IDependencies
+        {
+            private readonly IContainer c;
+            public StructureMapAdapter(IContainer c) { this.c = c; }
+            public T Instance<T>() where T : class => c.GetInstance<T>();
+        }
+
         protected override void Configure(ConfigurationExpression c)
         {
             c.For<IClock>().Use<FakeClock>();
             c.For<IGeocoder>().Use<FakeGeocoder>();
             c.For<IInterAggregateEventBus>().Use<FakeEventBus>();
             c.For<IReverseAuctionRepository>().Use<ReverseAuctionRepository>();
+            c.For<IDependencies>().Use<StructureMapAdapter>();
         }
 
         [Test]
@@ -93,44 +101,95 @@ namespace PersistenceTest
                 biddingAllowed: nextFiveMinutes);
         }
 
+        // Sometimes not all tests run and the following error occurs:
+        //
+        //    Could not find test executor with URI 'executor://nunit3testexecutor/'.
+        //
+        // Read https://github.com/nunit/nunit3-vs-adapter/issues/399, but
+        // no resolution so far.  The .CONFIG files mentioned in that thread 
+        // are in
+        //
+        //    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\TestWindow
+        //
+
         [Test]
         public void OptimisticConcurrencyControl()
         {
             // Arrange
-            var container1 = Container.GetNestedContainer();
-            var session1 = container1.GetInstance<ISession>();
-            var repository1 = container1.GetInstance<IReverseAuctionRepository>();
+            var ann = new ConcurrentPickupAddressModifier(
+                Container.GetNestedContainer(),
+                "Ann");
+            var bob = new ConcurrentPickupAddressModifier(
+                Container.GetNestedContainer(),
+                "Bob");
+            Assert.That(ann.IsOnSeparateNHibernateSessionFrom(bob));
 
-            var container2 = Container.GetNestedContainer();
-            var session2 = container2.GetInstance<ISession>();
-            var repository2 = container2.GetInstance<IReverseAuctionRepository>();
-
-            Assert.AreNotSame(session1, session2);
-            Assert.AreNotSame(repository1, repository2);
-
-            var aggregate1 = NewReverseAuction();
-            repository1.Save(aggregate1);
-
-            var aggregate2 = repository2.Get(aggregate1.Id);
-            Assert.AreNotSame(aggregate1, aggregate2);
+            var id = ann.Save(NewReverseAuction());
+            bob.LoadExistingReverseAuction(id);
 
             // Act
-            var mutator = container1.GetInstance<ReverseAuctionAggregate.AlterPickupLocation>();
-            mutator.ChangePickup(aggregate2, "Abu Dahbi");
-            mutator.ChangePickup(aggregate1, "Timbuktu");
-            Console.WriteLine($"aggregate1.Version before save: {aggregate1.Version}");
-            Console.WriteLine($"aggregate2.Version before save: {aggregate2.Version}");
+            ann.AlterPickupButDoNotFlush("Abu Dahbi");
+            bob.AlterPickupButDoNotFlush("Timbuktu");
 
-            repository1.Save(aggregate1);
-            session1.Flush();
-            Console.WriteLine($"aggregate1.Version after save: {aggregate1.Version}");
+            ann.FlushNHibernateSession();
+            // Notice that Ann just saved version 2, but Bob has version 1!
 
             // Assert
-            repository2.Save(aggregate2);
             Assert.Throws<StaleObjectStateException>(() =>
             {
-                session2.Flush();
+                bob.FlushNHibernateSession();
             });
+        }
+
+        private class ConcurrentPickupAddressModifier
+        {
+            private string _label;
+            private IContainer _container;
+            private ISession _session;
+            private IReverseAuctionRepository _repository;
+            private IDependencies _di;
+            public ReverseAuctionAggregate _aggregate;
+
+            public ConcurrentPickupAddressModifier(IContainer c, string label)
+            {
+                _label = label;
+                _container = c;
+                _session = c.GetInstance<ISession>();
+                _repository = c.GetInstance<IReverseAuctionRepository>();
+                _di = c.GetInstance<IDependencies>();
+                _aggregate = null;
+            }
+
+            public bool IsOnSeparateNHibernateSessionFrom(ConcurrentPickupAddressModifier other)
+            {
+                return !object.ReferenceEquals(_session, other._session)
+                    && !object.ReferenceEquals(_repository, other._repository);
+            }
+
+            public int Save(ReverseAuctionAggregate agg)
+            {
+                _aggregate = agg;
+                _repository.Save(_aggregate);
+                return _aggregate.Id;
+            }
+
+            public void LoadExistingReverseAuction(int id)
+            {
+                _aggregate = _repository.Get(id);
+            }
+
+            public void AlterPickupButDoNotFlush(string newPickup)
+            {
+                _aggregate.AlterPickup(_di, "Timbuktu");
+                Console.WriteLine($"{_label}.Version before save: {_aggregate.Version}");
+                _repository.Save(_aggregate);
+            }
+
+            public void FlushNHibernateSession()
+            {
+                _session.Flush();
+                Console.WriteLine($"{_label}.Version after save: {_aggregate.Version}");
+            }
         }
     }
 }
