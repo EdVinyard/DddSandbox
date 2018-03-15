@@ -1,5 +1,6 @@
 ﻿using Domain;
 using Domain.Aggregate.Auction;
+using Domain.Aggregate.Common;
 using Domain.Port;
 using NHibernate;
 using NUnit.Framework;
@@ -111,6 +112,7 @@ namespace PersistenceTest
         //
         //    C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\CommonExtensions\Microsoft\TestWindow
         //
+        // This doesn't happen from the command line.  See RunAllTests.ps1.
 
         [Test]
         public void OptimisticConcurrencyControl()
@@ -141,6 +143,9 @@ namespace PersistenceTest
             });
         }
 
+        /// <summary>
+        /// A DSL to make the concurrency test more readable.
+        /// </summary>
         private class ConcurrentPickupAddressModifier
         {
             private string _label;

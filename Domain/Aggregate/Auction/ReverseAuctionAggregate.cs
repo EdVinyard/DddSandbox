@@ -1,16 +1,42 @@
-﻿namespace Domain.Aggregate.Auction
+﻿using Domain.Aggregate.Common;
+
+namespace Domain.Aggregate.Auction
 {
     // TODO: This verges on Smurf-naming, because I haven't figured
     // out how to name things when the aggregate name and the aggregate
     // root Entity name seem to be the same thing.
     public sealed class ReverseAuctionAggregate
     {
-        internal ReverseAuction Root { get; private set; }
+        // Notice that these pass-through properties are getter-only.
+        // We'd prefer to expose mutators only in ways that makes it 
+        // extremely clear when there are *any* side-effects or 
+        // dependencies.
+
         public int Id => Root.Id;
-        internal int Version => Root.Version; // TODO: Remove this?
         public Terms BuyerTerms => Root.BuyerTerms;
         public TimeRange BiddingAllowed => Root.BiddingAllowed;
 
+        /// <summary>
+        /// Exposed for ReverseAuctionRepository use only.
+        /// (I haven't figured out how to hide this more
+        /// effectively.  Should I rename it "_Root" as a
+        /// warning?)
+        /// </summary>
+        internal ReverseAuction Root { get; private set; }
+
+        /// <summary>
+        /// Exposed for testing and debugging only.
+        /// </summary>
+        internal int Version => Root.Version;
+
+        /// <summary>
+        /// This is a Domain Service needed to *create* an Aggregate.
+        /// It could optionally be exposed as a static method on the
+        /// Aggregate itself that takes an explicit Port.IDependencies
+        /// argument, like <c>AlterPickup()</c> does.  However, the
+        /// name scoping and convention make it fairly easy to discover
+        /// and use.
+        /// </summary>
         public class Factory : Domain.Service
         {
             private Location.Factory _locationFactory;
@@ -76,6 +102,22 @@
             }
         }
 
+        /// <summary>
+        /// This is a Domain Service needed to mutate an Aggregate.
+        /// In order to avoid both the Service Location Pattern and
+        /// dependencies in our Aggregate, we separate it out, thus.
+        /// This has nice qualities:
+        /// 
+        /// 1) It looks like a separate CQS type, but client code
+        ///    doesn't invoke it directly.  Additionally, CQS *classes*
+        ///    can make the operations available on an Aggregate more
+        ///    difficult to discover (which means they're more likely
+        ///    to be re-implemented in a slightly different way).
+        ///    
+        /// 2) Dependencies for a single Aggregate method are clear
+        ///    and hopefully concise which eases testing, and makes 
+        ///    the methods cheaper.
+        /// </summary>
         private class AlterPickupSvc : Service
         {
             private Location.Factory _locationFactory;
@@ -100,6 +142,29 @@
             }
         }
 
+        /// <summary>
+        /// Alter the pickup location.
+        /// 
+        /// Aggregate methods that have dependencies are implemented as 
+        /// "hidden" (private, nested) Service classes (AlterPickupSvc in 
+        /// this case) and exposed to clients on the Aggregate interface
+        /// just like this.  This method *must* be a pass-through only, with
+        /// no logic whatsoever.
+        /// 
+        /// We get as much of the best of both words as we can:
+        /// - Client authors see a concise argument list.
+        /// - Test authors see dependencies enumerated on the hidden 
+        ///   service's constructor.
+        /// </p>
+        /// </summary>
+        /// <param name="di">
+        /// A dependency injector.  Using a thin facade atop what'll be 
+        /// StructureMap at runtime keeps our Domain model pure (entirely 
+        /// lacking in external dependencies) and means that switching DI
+        /// Containers later doesn't modify the Domain at all.
+        /// </param>
+        /// <param name="newPickupAddress">
+        /// </param>
         public void AlterPickup(Port.IDependencies di, string newPickupAddress)
         {
             di.Instance<AlterPickupSvc>()
@@ -107,8 +172,10 @@
         }
 
         /// <summary>
-        /// exposed as internal only for the Repository; it would be
-        /// better were it just private
+        /// Exposed for ReverseAuctionRepository use only.
+        /// (I haven't figured out how to hide this more
+        /// effectively.  Should I expose a only as an internal 
+        /// static method, "_New()" as a warning?)
         /// </summary>
         internal ReverseAuctionAggregate(ReverseAuction auction)
         {

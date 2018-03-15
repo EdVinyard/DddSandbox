@@ -1,4 +1,4 @@
-﻿using Domain.Aggregate.Auction;
+﻿using Domain.Aggregate.Common;
 using NUnit.Framework;
 using System;
 

@@ -1,4 +1,5 @@
-﻿using Domain.Port;
+﻿using Domain.Aggregate.Common;
+using Domain.Port;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -61,7 +62,7 @@ namespace Domain.Aggregate.Auction
         }
 
         /// <summary>
-        /// FOR NHibernate and ReverseAuction.Constructor ONLY!
+        /// FOR NHibernate ONLY!
         /// </summary>        
         protected ReverseAuction() { }
 

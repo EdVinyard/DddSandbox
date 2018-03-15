@@ -1,4 +1,4 @@
-﻿namespace Domain.Aggregate
+﻿namespace Domain.Aggregate.Common
 {
     public class Money : ValueType
     {

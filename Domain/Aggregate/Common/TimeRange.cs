@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Domain.Aggregate.Auction
+namespace Domain.Aggregate.Common
 {
     // RULE: Any value type that is used by more than one
     // aggregate should be "promoted" to some common area to make

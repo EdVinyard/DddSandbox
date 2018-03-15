@@ -1,5 +1,6 @@
-﻿using Domain.Aggregate;
-using Domain.Aggregate.Auction;
+﻿using Domain.Aggregate.Auction;
+using Domain.Aggregate.Bid;
+using Domain.Aggregate.Common;
 using FluentNHibernate.Mapping;
 
 namespace Persistence
@@ -56,7 +57,9 @@ namespace Persistence
         public BidMap()
         {
             Id(x => x.Id);
-            Component(x => x.SellerTerms).ColumnPrefix("SellerTerms_");
+            Map(x => x.ReverseAuctionId);
+            Component(x => x.PickupTime).ColumnPrefix("PickupTime_");
+            Component(x => x.DropoffTime).ColumnPrefix("DropoffTime_");
             Component(x => x.Price).ColumnPrefix("Price_");
         }
     }

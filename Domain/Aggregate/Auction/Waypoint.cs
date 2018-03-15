@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Aggregate.Common;
+using System;
 using System.Collections.Generic;
 
 namespace Domain.Aggregate.Auction
