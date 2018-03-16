@@ -5,6 +5,8 @@ using System;
 
 namespace PersistenceTest
 {
+    // TODO: Delete this whole file?  We don't seem to need it.
+
     public class DependencyInjectionContainer
     {
         private IContainer _instance;
@@ -14,7 +16,7 @@ namespace PersistenceTest
             {
                 if (null == _instance)
                 {
-                    throw new ApplicationException("You must invoke " +
+                    throw new InvalidOperationException("You must invoke " +
                         "DependencyInjectionCotnainer.Setup() before .Instance.");
                 }
 

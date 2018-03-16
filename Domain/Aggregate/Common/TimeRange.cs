@@ -137,6 +137,24 @@ namespace Domain.Aggregate.Common
             return (Start <= dateTime) && (dateTime < End); 
         }
 
+        /// <summary>
+        /// Returns true iff the specified TimeRange is entirely included within
+        /// this range.
+        /// If the value is equal to or later than <c>Start</c>, but earlier 
+        /// than <c>End</c>, it is included.
+        /// </summary>
+        /// <returns>
+        /// true iff <c>(Start <= dateTime < End)</c>
+        /// </returns>
+        public bool Includes(TimeRange other)
+        {
+            if (object.ReferenceEquals(this, Never)) return false;
+            if (object.ReferenceEquals(other, Never)) return false;
+
+            return this.Includes(other.Start)
+                && (other.End <= this.End);
+        }
+
         //// parameters
         //var dateTime = Expression.Parameter(typeof(DateTime));
         //var timeRange = Expression.Parameter(typeof(TimeRange));
@@ -181,6 +199,13 @@ namespace Domain.Aggregate.Common
             hashCode = hashCode * -1521134295 + EqualityComparer<DateTimeOffset>.Default.GetHashCode(Start);
             hashCode = hashCode * -1521134295 + EqualityComparer<TimeSpan>.Default.GetHashCode(Duration);
             return hashCode;
+        }
+
+        public override string ToString()
+        {
+            if (object.ReferenceEquals(this, Never)) return "<never>";
+            if (Duration == TimeSpan.Zero) return $"[{Start}]";
+            return $"[{Start}, {End})";
         }
     }
 }

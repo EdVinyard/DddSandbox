@@ -89,7 +89,9 @@ namespace Domain.Aggregate.Auction
             return hashCode;
         }
 
-        // TODO: How do we force client code to use the Aggregate service instead of this method?
+        // TODO: How do we force client code, even within the Domain model,
+        // to use ReverseAuctionAggregate.AlterPickupSvc() service instead 
+        // of this method?
         internal void ChangePickup(Location pickup)
         {
             Pickup = new Waypoint(pickup, Pickup.Time);

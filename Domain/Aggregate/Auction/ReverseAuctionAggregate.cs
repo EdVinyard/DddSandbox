@@ -1,4 +1,7 @@
-﻿using Domain.Aggregate.Common;
+﻿using System;
+using System.Runtime.Serialization;
+using Domain.Aggregate.Common;
+using Domain.Port;
 
 namespace Domain.Aggregate.Auction
 {
@@ -169,6 +172,158 @@ namespace Domain.Aggregate.Auction
         {
             di.Instance<AlterPickupSvc>()
                 .AlterPickup(this, newPickupAddress);
+        }
+
+        /// <summary>
+        /// This is a Domain Service needed to create a different Aggregate, 
+        /// a Bid.  It should be the *only* way a Bid is ever created.
+        /// </summary>
+        private class PlaceBidSvc : Domain.Service
+        {
+            private readonly IInterAggregateEventBus _interAggregateEventBus;
+            private readonly IClock _clock;
+
+            public PlaceBidSvc(
+                IInterAggregateEventBus interAggregateEventBus,
+                IClock clock)
+            {
+                _interAggregateEventBus = interAggregateEventBus;
+                _clock = clock;
+            }
+
+            public Bid.BidAggregate PlaceBid(
+                ReverseAuctionAggregate reverseAuction,
+                TimeRange pickupTime,
+                TimeRange dropoffTime,
+                Money price)
+            {
+                Precondition.MustNotBeNull(reverseAuction, nameof(reverseAuction));
+
+                // RULE: We'd like to delegate validation and precondition 
+                // checking to Factorys.  That keeps the Aggregate code 
+                // clean and simple...
+                // but we need to enforce a relationship between the Auction
+                // and the new Bid.
+
+                BiddingMustBeAllowedNow(reverseAuction);
+                BidMustConformToAuctionTime(
+                    reverseAuction.Root.BuyerTerms.Pickup,
+                    nameof(pickupTime),
+                    pickupTime);
+                BidMustConformToAuctionTime(
+                    reverseAuction.Root.BuyerTerms.Dropoff,
+                    nameof(dropoffTime),
+                    dropoffTime);
+                PriceMustBeNonNegative(price);
+
+                var bid = new Bid.Bid(
+                    reverseAuction.Id,
+                    pickupTime,
+                    dropoffTime,
+                    price);
+
+                // TODO: According to IDDD, we'd publish a "created" event
+                // here.  I need to fit this into the context of our work
+                // to wrap DB transactions around business interactions.
+                // OTOH, there may be no conflict if the domain event 
+                // publisher is flexible enough that in test the event is
+                // published immediately but in production the event is
+                // only published when the transaction is committed.  
+                // However, if the consistency boundary IS the aggregate,
+                // it may not be reasonable to wait.
+
+                var aggregate = new Bid.BidAggregate(bid);
+
+                _interAggregateEventBus.Publish(
+                    new Bid.Event.BidCreated(aggregate));
+
+                return aggregate;
+            }
+
+            private void BiddingMustBeAllowedNow(ReverseAuctionAggregate reverseAuction)
+            {
+                Precondition.MustNotBeNull(reverseAuction, nameof(reverseAuction));
+
+                if (!reverseAuction.BiddingAllowed.Includes(_clock.Now))
+                {
+                    throw new BiddingNotAllowedNow(reverseAuction, _clock);
+                }
+            }
+
+            private void PriceMustBeNonNegative(Money price)
+            {
+                Precondition.MustNotBeNull(price, nameof(price));
+
+                if (price.IsNegative)
+                {
+                    throw new NegativePriceProhibited(price);
+                }
+            }
+
+            private void BidMustConformToAuctionTime(
+                Waypoint auctionWaypoint,
+                string argumentName,
+                TimeRange bidTime)
+            {
+                Precondition.MustNotBeNull(auctionWaypoint, nameof(auctionWaypoint));
+                Precondition.MustNotBeNull(argumentName, nameof(argumentName));
+                Precondition.MustNotBeNull(bidTime, nameof(bidTime));
+
+                if (!auctionWaypoint.Time.Includes(bidTime))
+                {
+                    throw new BidTimeDisagreesWithAuctionTime(
+                        auctionWaypoint,
+                        argumentName,
+                        bidTime);
+                }
+            }
+
+        }
+
+        [Serializable]
+        public class BiddingNotAllowedNow : InvalidOperationException
+        {
+            internal BiddingNotAllowedNow(
+                ReverseAuctionAggregate reverseAuction,
+                IClock clock)
+                : base(
+                    $"at {clock.Now}, bidding is not allowed on " +
+                    $"ReverseAuction {reverseAuction.Id}")
+            { }
+        }
+
+        [Serializable]
+        public class NegativePriceProhibited : ArgumentException
+        {
+            internal NegativePriceProhibited(Money price) : base(
+                "the Bid price must not be negative; it was {price}")
+            { }
+        }
+
+        [Serializable]
+        public class BidTimeDisagreesWithAuctionTime : ArgumentException
+        {
+            internal BidTimeDisagreesWithAuctionTime(
+                Waypoint auctionWaypoint,
+                string paramName,
+                TimeRange bidTime)
+                : base(
+                    $"the proposed Bid {paramName}, {bidTime}, is not " +
+                    $"compatible with the Auction's {auctionWaypoint.Time}",
+                    paramName)
+            { }
+        }
+
+        public Bid.BidAggregate PlaceBid(
+            Port.IDependencies di,
+            TimeRange pickupTime,
+            TimeRange dropoffTime,
+            Money price)
+        {
+            return di.Instance<PlaceBidSvc>().PlaceBid(
+                this,
+                pickupTime, 
+                dropoffTime, price);
         }
 
         /// <summary>

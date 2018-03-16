@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Domain.Aggregate.Auction
+namespace Domain.Aggregate.Auction //: Aggregate
 {
     /// <summary>
     /// A time and place that denote one point of a trip: the starting point,

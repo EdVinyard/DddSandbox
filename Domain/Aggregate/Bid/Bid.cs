@@ -37,7 +37,12 @@ namespace Domain.Aggregate.Bid
             protected set { _price = value; }
         }
 
-        public Bid(
+        /// <summary>
+        /// For use by ReverseAuction.PlaceBid() factory method ONLY!
+        /// TODO: How can this be hidden better, even from other types 
+        /// in the Domain?
+        /// </summary>
+        internal Bid(
             int reverseAuctionId,
             TimeRange pickupTime,
             TimeRange dropoffTime,

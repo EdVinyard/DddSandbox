@@ -5,7 +5,7 @@ using System;
 namespace DomainTest
 {
     [TestFixture]
-    public class TimeRangeTest
+    public class TimeRangeConstructorTest
     {
         [Test]
         public void WhenDurationIsPositive()
