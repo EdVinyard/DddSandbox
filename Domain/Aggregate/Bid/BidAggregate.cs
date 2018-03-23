@@ -5,7 +5,7 @@ namespace Domain.Aggregate.Bid
     // TODO: This verges on Smurf-naming, because I haven't figured
     // out how to name things when the aggregate name and the aggregate
     // root Entity name seem to be the same thing.
-    public sealed class BidAggregate //: Aggregate
+    public sealed class BidAggregate : IAggregate
     {
         public int Id => Root.Id;
 

@@ -8,7 +8,7 @@ namespace Domain.Aggregate.Auction
     // TODO: This verges on Smurf-naming, because I haven't figured
     // out how to name things when the aggregate name and the aggregate
     // root Entity name seem to be the same thing.
-    public sealed class ReverseAuctionAggregate
+    public sealed class ReverseAuctionAggregate : IAggregate
     {
         // Notice that these pass-through properties are getter-only.
         // We'd prefer to expose mutators only in ways that makes it 
@@ -121,12 +121,17 @@ namespace Domain.Aggregate.Auction
         ///    and hopefully concise which eases testing, and makes 
         ///    the methods cheaper.
         /// </summary>
-        private class AlterPickupSvc : Service
+        private class _AlterPickup : ICommand
         {
+            // RULE: Domain Services classes nested inside an IAggregate
+            // must contain a single constructor and a single public
+            // method.  They should be either a Command or a Query, not 
+            // both.
+
             private Location.Factory _locationFactory;
             private IInterAggregateEventBus _interAggregateEventBus;
 
-            public AlterPickupSvc(
+            public _AlterPickup(
                 Location.Factory locationFactory,
                 IInterAggregateEventBus interAggregateEventBus)
             {
@@ -170,7 +175,7 @@ namespace Domain.Aggregate.Auction
         /// </param>
         public void AlterPickup(Port.IDependencies di, string newPickupAddress)
         {
-            di.Instance<AlterPickupSvc>()
+            di.Instance<_AlterPickup>()
                 .AlterPickup(this, newPickupAddress);
         }
 
@@ -178,12 +183,12 @@ namespace Domain.Aggregate.Auction
         /// This is a Domain Service needed to create a different Aggregate, 
         /// a Bid.  It should be the *only* way a Bid is ever created.
         /// </summary>
-        private class PlaceBidSvc : Domain.Service
+        private class _PlaceBid : ICommand
         {
             private readonly IInterAggregateEventBus _interAggregateEventBus;
             private readonly IClock _clock;
 
-            public PlaceBidSvc(
+            public _PlaceBid(
                 IInterAggregateEventBus interAggregateEventBus,
                 IClock clock)
             {
@@ -320,7 +325,7 @@ namespace Domain.Aggregate.Auction
             TimeRange dropoffTime,
             Money price)
         {
-            return di.Instance<PlaceBidSvc>().PlaceBid(
+            return di.Instance<_PlaceBid>().PlaceBid(
                 this,
                 pickupTime, 
                 dropoffTime, price);
