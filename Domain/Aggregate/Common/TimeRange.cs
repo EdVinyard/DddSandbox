@@ -14,6 +14,20 @@ namespace Domain.Aggregate.Common
     // are the bulit-in types: int, string, etc. that'll be used
     // everywhere, but also DateTimeOffset, TimeSpan, other such
     // general concepts.
+    //
+    // Value Types MAY be shared by Aggregates within a Bounded 
+    // Context.  Value Types SHOULD NOT be shared between Bounded 
+    // Contexts.  Even if they initially appear to have
+    // the same meaning within those separate Contexts, it is
+    // likely that their meaning will evolve or be discovered over
+    // time to differ slightly.  For example, one Bounded Context
+    // may need to tie a specitic date and time, with an associated
+    // currency conversion rate, to a price.  Another Context may
+    // need only the amount and monetary unit.  The imperative to 
+    // D.R.Y. must never outweight the need for
+    // correct, appropriate, focused Types, without "extra" features 
+    // or functionality, only appropriate in some other Context, that
+    // distracts the developer reading the code of a Bounded Context.
 
     /// <summary>
     /// An immutable "window" of time, with a specific start and end time.

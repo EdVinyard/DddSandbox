@@ -17,12 +17,14 @@
     /// 
     /// public class Bank : IAggregate {
     /// 
-    ///     public void DeliquentAccounts(IDependencies deps) {
+    ///     public void DeliquentAccounts(IDependencies deps) 
+    ///     {
     ///         deps.Instance<_DeliquentAccounts>()
     ///             .IssueCreditCard(this);
     ///     }
     ///     
-    ///     internal class _DeliquentAccounts : ICommand {
+    ///     internal class _DeliquentAccounts : ICommand 
+    ///     {
     ///         private readonly IClock _clock;
     ///         public _DeliquentAccounts(IClock clock) {
     ///             _clock = clock;

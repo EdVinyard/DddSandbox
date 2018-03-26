@@ -18,12 +18,16 @@
     /// 
     /// public class Bank : IAggregate {
     /// 
-    ///     public void IssueCreditCard(IDependencies deps, CCApplication app) {
+    ///     public void IssueCreditCard(
+    ///         IDependencies deps, 
+    ///         CCApplication app) 
+    ///     {
     ///         deps.Instance<_IssueCreditCard>()
     ///             .IssueCreditCard(this, app);
     ///     }
     ///     
-    ///     internal class _IssueCreditCard : ICommand {
+    ///     internal class _IssueCreditCard : ICommand 
+    ///     {
     ///         private readonly ICreditChecker _checker;
     ///         public _IssueCreditCard(ICreditChecker checker) {
     ///             _checker = checker;
