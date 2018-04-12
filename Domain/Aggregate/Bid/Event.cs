@@ -1,4 +1,6 @@
-﻿namespace Domain.Aggregate.Bid.Event
+﻿using Domain.Aggregate.Common;
+
+namespace Domain.Aggregate.Bid.Event
 {
     public class BidEvent : InterAggregateEvent
     {
@@ -18,6 +20,10 @@
 
     public class BidCreated : BidEvent
     {
-        internal BidCreated(BidAggregate x) : base(x) { }
+        public Money Price { get; }
+        internal BidCreated(BidAggregate x) : base(x)
+        {
+            Price = x.Root.Price;
+        }
     }
 }

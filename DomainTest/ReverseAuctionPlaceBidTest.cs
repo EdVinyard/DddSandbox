@@ -1,11 +1,14 @@
 ﻿using Domain;
 using Domain.Aggregate.Auction;
+using Domain.Aggregate.Bid.Event;
 using Domain.Aggregate.Common;
 using Domain.Port;
 using NUnit.Framework;
 using StructureMap;
 using System;
+using System.Collections.Generic;
 using System.Device.Location;
+using System.Linq;
 
 namespace DomainTest
 {
@@ -40,8 +43,12 @@ namespace DomainTest
 
         public class FakeEventBus : IInterAggregateEventBus
         {
+            public List<InterAggregateEvent> EventLog = 
+                new List<InterAggregateEvent>();
+
             public void Publish(InterAggregateEvent anEvent)
             {
+                EventLog.Add(anEvent);
                 Console.WriteLine($"Published: {anEvent}");
             }
 
@@ -62,10 +69,7 @@ namespace DomainTest
         public void BiddingIsAllowedNow()
         {
             // Arrange
-            var clock = Container.GetInstance<IClock>();
-            var nextFiveMinutes = new TimeRange(clock.Now, TimeSpan.FromMinutes(5));
-
-            var auction = NewAuction(biddingAllowed: nextFiveMinutes);
+            var auction = NewAuction(biddingAllowed: NextFiveMinutes);
 
             // Act and Assert
             Assert.DoesNotThrow(() => auction.PlaceBid(
@@ -117,10 +121,7 @@ namespace DomainTest
         public void BidPickupTimeDisagreesWithAuctionPickupTime()
         {
             // Arrange
-            var clock = Container.GetInstance<IClock>();
-            var nextFiveMinutes = new TimeRange(clock.Now, TimeSpan.FromMinutes(5));
-
-            var auction = NewAuction(biddingAllowed: nextFiveMinutes);
+            var auction = NewAuction(biddingAllowed: NextFiveMinutes);
             var pickupTimeThatDisagrees = new TimeRange(
                 auction.BuyerTerms.Pickup.Time.Start,
                 auction.BuyerTerms.Pickup.Time.Duration.Add(TimeSpan.FromMinutes(1)));
@@ -138,10 +139,7 @@ namespace DomainTest
         public void BidPickupTimeAgreesWithAuctionPickupTime()
         {
             // Arrange
-            var clock = Container.GetInstance<IClock>();
-            var nextFiveMinutes = new TimeRange(clock.Now, TimeSpan.FromMinutes(5));
-
-            var auction = NewAuction(biddingAllowed: nextFiveMinutes);
+            var auction = NewAuction(biddingAllowed: NextFiveMinutes);
             var pickupTimeThatAgrees = new TimeRange(
                 auction.BuyerTerms.Pickup.Time.Start,
                 auction.BuyerTerms.Pickup.Time.Duration.Add(TimeSpan.FromMinutes(-1)));
@@ -158,10 +156,7 @@ namespace DomainTest
         public void BidDropoffTimeDisagreesWithAuctionDropoffTime()
         {
             // Arrange
-            var clock = Container.GetInstance<IClock>();
-            var nextFiveMinutes = new TimeRange(clock.Now, TimeSpan.FromMinutes(5));
-
-            var auction = NewAuction(biddingAllowed: nextFiveMinutes);
+            var auction = NewAuction(biddingAllowed: NextFiveMinutes);
             var dropoffTimeThatDisagrees = new TimeRange(
                 auction.BuyerTerms.Dropoff.Time.Start,
                 auction.BuyerTerms.Dropoff.Time.Duration.Add(TimeSpan.FromMinutes(1)));
@@ -179,10 +174,7 @@ namespace DomainTest
         public void BidDropoffTimeAgreesWithAuctionDropoffTime()
         {
             // Arrange
-            var clock = Container.GetInstance<IClock>();
-            var nextFiveMinutes = new TimeRange(clock.Now, TimeSpan.FromMinutes(5));
-
-            var auction = NewAuction(biddingAllowed: nextFiveMinutes);
+            var auction = NewAuction(biddingAllowed: NextFiveMinutes);
             var dropoffTimeThatAgrees = new TimeRange(
                 auction.BuyerTerms.Dropoff.Time.Start,
                 auction.BuyerTerms.Dropoff.Time.Duration.Add(TimeSpan.FromMinutes(-1)));
@@ -194,5 +186,31 @@ namespace DomainTest
                 dropoffTimeThatAgrees,
                 Money.USD(1.00m)));
         }
+
+        [Test]
+        public void BidCreatedEventPublishedWithNewBidId()
+        {
+            // Arrange
+            var bus = (FakeEventBus)Container.GetInstance<IInterAggregateEventBus>();
+            var auction = NewAuction(biddingAllowed: NextFiveMinutes);
+
+            // Act
+            var bid = auction.PlaceBid(
+                Container.GetInstance<IDependencies>(),
+                auction.BuyerTerms.Pickup.Time,
+                auction.BuyerTerms.Dropoff.Time,
+                Money.USD(1.00m));
+
+            // Assert
+            var lastEvent = bus.EventLog.Last();
+            Assert.IsAssignableFrom<BidCreated>(lastEvent);
+
+            var bidCreated = (BidCreated)lastEvent;
+            Assert.AreEqual(bid.Id, bidCreated.Id);
+        }
+
+        private TimeRange NextFiveMinutes => new TimeRange(
+            Container.GetInstance<IClock>().Now,
+            TimeSpan.FromMinutes(5));
     }
 }

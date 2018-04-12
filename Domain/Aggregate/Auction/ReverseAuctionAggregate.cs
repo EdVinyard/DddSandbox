@@ -282,7 +282,6 @@ namespace Domain.Aggregate.Auction
                         bidTime);
                 }
             }
-
         }
 
         [Serializable]
