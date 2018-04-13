@@ -1,4 +1,4 @@
-﻿namespace Domain
+﻿namespace DDD
 {
     /// <summary>
     /// For each type of object that needs global access, create an object 

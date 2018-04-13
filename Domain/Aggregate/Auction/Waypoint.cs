@@ -8,7 +8,7 @@ namespace Domain.Aggregate.Auction //: Aggregate
     /// A time and place that denote one point of a trip: the starting point,
     /// stopping point, or some significant intermediate point between.
     /// </summary>
-    public class Waypoint : ValueType, IEquatable<Waypoint>
+    public class Waypoint : DDD.ValueType, IEquatable<Waypoint>
     {
         private TimeRange _time;
         private Location _place;

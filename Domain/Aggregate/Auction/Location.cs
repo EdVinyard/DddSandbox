@@ -1,4 +1,5 @@
-﻿using Domain.Port;
+﻿using DDD;
+using Domain.Port;
 using System;
 using System.Collections.Generic;
 using System.Device.Location;
@@ -9,7 +10,7 @@ namespace Domain.Aggregate.Auction
     /// A place on Earth, with a colloquial name (Address) and precise formal 
     /// specification (GeoCoordinate).
     /// </summary>
-    public class Location : ValueType
+    public class Location : DDD.ValueType
     {
         // RULE: Value Types MAY either be instantiated using a traditional
         // constructor, or a class-scoped Factory, whichever is appropriate.

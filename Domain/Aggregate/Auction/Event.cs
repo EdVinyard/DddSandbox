@@ -1,4 +1,6 @@
-﻿namespace Domain.Aggregate.Auction.Event
+﻿using DDD;
+
+namespace Domain.Aggregate.Auction.Event
 {
     public class ReverseAuctionEvent : InterAggregateEvent
     {

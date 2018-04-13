@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Domain
+namespace DDD
 {
     public abstract class Entity : IEquatable<Entity>
     {

@@ -1,10 +1,11 @@
-﻿using Domain.Port;
+﻿using DDD;
+using Domain.Port;
 using System;
 using System.Collections.Generic;
 
 namespace Domain.Aggregate.Auction
 {
-    public class Terms : ValueType, IEquatable<Terms>
+    public class Terms : DDD.ValueType, IEquatable<Terms>
     {
         /// <summary>
         /// A stateless Domain Service that creates instances of Terms.

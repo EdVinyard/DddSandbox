@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Domain
+namespace DDD
 {
     /// <summary>
     /// A Domain Event.  I use the more specific name here, "inter-aggregate 

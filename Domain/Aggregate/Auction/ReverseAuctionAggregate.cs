@@ -1,7 +1,7 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using DDD;
 using Domain.Aggregate.Common;
 using Domain.Port;
+using System;
 
 namespace Domain.Aggregate.Auction
 {
@@ -40,7 +40,7 @@ namespace Domain.Aggregate.Auction
         /// name scoping and convention make it fairly easy to discover
         /// and use.
         /// </summary>
-        public class Factory : Domain.Service
+        public class Factory : Service
         {
             private Location.Factory _locationFactory;
             private ReverseAuction.Factory _reverseAuctionFactory;
@@ -180,8 +180,8 @@ namespace Domain.Aggregate.Auction
         }
 
         /// <summary>
-        /// This is a Domain Service needed to create a different Aggregate, 
-        /// a Bid.  It should be the *only* way a Bid is ever created.
+        /// This Domain Service creates a *different* Aggregate, 
+        /// a Bid.  It must be the *only* way a Bid is ever created.
         /// </summary>
         private class _PlaceBid : ICommand
         {

@@ -32,7 +32,7 @@ namespace Domain.Aggregate.Common
     /// <summary>
     /// An immutable "window" of time, with a specific start and end time.
     /// </summary>
-    public class TimeRange : IEquatable<TimeRange>
+    public class TimeRange : DDD.ValueType, IEquatable<TimeRange>
     {
         /// <summary>
         /// An unsatisfiable TimeRange, such that there are no instants in time

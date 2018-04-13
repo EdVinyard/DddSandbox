@@ -1,4 +1,4 @@
-﻿namespace Domain
+﻿namespace DDD
 {
     /// <summary>
     /// a marker interface to clearly distinguish between Entity and Value 

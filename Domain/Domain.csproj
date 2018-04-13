@@ -39,8 +39,6 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Aggregate.cs" />
-    <Compile Include="AggregateRoot.cs" />
     <Compile Include="Aggregate\Bid\Bid.cs" />
     <Compile Include="Aggregate\Auction\IReverseAuctionRepository.cs" />
     <Compile Include="Aggregate\Auction\Event.cs" />
@@ -52,22 +50,20 @@
     <Compile Include="Aggregate\Bid\BidAggregate.cs" />
     <Compile Include="Aggregate\Bid\Event.cs" />
     <Compile Include="Aggregate\Common\Money.cs" />
-    <Compile Include="Command.cs" />
-    <Compile Include="Entity.cs" />
-    <Compile Include="InterAggregateEvent.cs" />
-    <Compile Include="IRepository.cs" />
     <Compile Include="Port\IClock.cs" />
     <Compile Include="Port\IDependencies.cs" />
     <Compile Include="Port\IGeocoder.cs" />
     <Compile Include="Precondition.cs" />
     <Compile Include="Aggregate\Common\TimeRange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Query.cs" />
-    <Compile Include="Service.cs" />
     <Compile Include="TimeSpanX.cs" />
-    <Compile Include="ValueType.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\DomainDrivenDesign\DomainDrivenDesign.csproj">
+      <Project>{b3b19461-e049-4371-af74-b95c0e7bbe4f}</Project>
+      <Name>DomainDrivenDesign</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

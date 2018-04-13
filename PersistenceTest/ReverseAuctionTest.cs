@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using DDD;
+using Domain;
 using Domain.Aggregate.Auction;
 using Domain.Aggregate.Common;
 using Domain.Port;

@@ -56,6 +56,10 @@
     <Compile Include="TimeRangeIncludesTimeRangeTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DomainDrivenDesign\DomainDrivenDesign.csproj">
+      <Project>{b3b19461-e049-4371-af74-b95c0e7bbe4f}</Project>
+      <Name>DomainDrivenDesign</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Domain\Domain.csproj">
       <Project>{94c2332d-13d4-46c9-b32e-1a9beb80d901}</Project>
       <Name>Domain</Name>

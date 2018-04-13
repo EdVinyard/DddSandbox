@@ -1,4 +1,5 @@
-﻿using Domain.Aggregate.Common;
+﻿using DDD;
+using Domain.Aggregate.Common;
 using Domain.Port;
 using System;
 using System.Collections.Generic;

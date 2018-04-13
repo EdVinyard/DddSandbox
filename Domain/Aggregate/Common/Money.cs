@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace Domain.Aggregate.Common
 {
-    public class Money : ValueType, IEquatable<Money>
+    public class Money : DDD.ValueType, IEquatable<Money>
     {
         private static readonly Regex Iso4217CurrencyCodePattern = 
             new Regex(@"\A[A-Z]{3}\Z", RegexOptions.IgnoreCase);
