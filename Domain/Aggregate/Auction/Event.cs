@@ -1,4 +1,5 @@
 ﻿using DDD;
+using Framework;
 
 namespace Domain.Aggregate.Auction.Event
 {

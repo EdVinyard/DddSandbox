@@ -54,15 +54,17 @@
     <Compile Include="Port\IClock.cs" />
     <Compile Include="Port\IDependencies.cs" />
     <Compile Include="Port\IGeocoder.cs" />
-    <Compile Include="Precondition.cs" />
     <Compile Include="Aggregate\Common\TimeRange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TimeSpanX.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DomainDrivenDesign\DomainDrivenDesign.csproj">
       <Project>{b3b19461-e049-4371-af74-b95c0e7bbe4f}</Project>
       <Name>DomainDrivenDesign</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework\Framework.csproj">
+      <Project>{E0453B9C-810C-4397-A662-E2EC5788C56B}</Project>
+      <Name>Framework</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

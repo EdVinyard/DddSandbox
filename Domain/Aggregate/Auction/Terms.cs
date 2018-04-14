@@ -1,5 +1,6 @@
 ﻿using DDD;
 using Domain.Port;
+using Framework;
 using System;
 using System.Collections.Generic;
 

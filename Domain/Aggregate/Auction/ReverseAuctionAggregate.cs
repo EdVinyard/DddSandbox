@@ -1,6 +1,7 @@
 ﻿using DDD;
 using Domain.Aggregate.Common;
 using Domain.Port;
+using Framework;
 using System;
 
 namespace Domain.Aggregate.Auction

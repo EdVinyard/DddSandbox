@@ -1,5 +1,6 @@
 ﻿using DDD;
 using Domain.Aggregate.Common;
+using Framework;
 
 namespace Domain.Aggregate.Bid
 {

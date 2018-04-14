@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Domain
+namespace Framework
 {
     public static class Precondition
     {

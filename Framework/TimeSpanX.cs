@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Domain
+namespace Framework
 {
     /// <summary>
     /// This property belongs in a Base Class Library Extension project,

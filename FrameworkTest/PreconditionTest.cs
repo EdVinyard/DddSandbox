@@ -1,12 +1,14 @@
 ﻿using System;
 using NUnit.Framework;
-using Domain;
+using Framework;
 
 namespace DomainTest
 {
     [TestFixture]
     public class PreconditionTest
     {
+        public object Precondition { get; private set; }
+
         [Test]
         public void ExceptionMessageShouldIncludeNameOfVariable()
         {
@@ -14,7 +16,8 @@ namespace DomainTest
             string actualExceptionMessage = null;
             try
             {
-                Precondition.MustNotBeNull(null, "EXPECTED");
+                object nul = null;
+                nul.MustNotBeNull("EXPECTED");
                 Assert.Fail("The previous statement should have thrown " +
                     "ArgumentNullException.");
             }
