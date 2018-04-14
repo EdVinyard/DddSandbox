@@ -47,6 +47,7 @@
     <Reference Include="System.Device" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DomainStructure.cs" />
     <Compile Include="DomainTest.cs" />
     <Compile Include="MoneyConstructorTest.cs" />
     <Compile Include="PreconditionTest.cs" />

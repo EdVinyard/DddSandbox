@@ -13,16 +13,7 @@ namespace Domain.Aggregate.Auction
     /// </summary>
     public class ReverseAuction : AggregateRoot
     {
-        // RULE: Entities must always be constructed using a stateless 
-        // "factory service".  They should expose exactly one, 
-        // protected, zero-argument constructor.  This guarantees:
-        // 
-        // - no compiler warnings about virtual method calls in constructor
-        // 
-        // - infrastructure in place to add external dependencies to 
-        //   construction process later
-
-        // RULE: The Factory service for an aggregate root Entity must not 
+        // RULE: The Factory service for an Aggregate Root Entity must not 
         // be publicly accessible outside the domain.  It must be invoked
         // only by methods of its enclosing Aggregate type.  However, the 
         // Aggregate method itself should not perform any validation or 
@@ -32,7 +23,7 @@ namespace Domain.Aggregate.Auction
         /// A stateless Domain Service that creates instances of
         /// ReverseAuction.
         /// <summary>
-        public class Factory : Service // TODO: make internal, not public
+        public class Factory : DDD.Factory // TODO: make internal, not public
         {
             private readonly IClock _clock;
 
@@ -63,7 +54,7 @@ namespace Domain.Aggregate.Auction
         }
 
         /// <summary>
-        /// FOR NHibernate ONLY!
+        /// FOR NHibernate AND ReverseAuction.Factory ONLY!
         /// </summary>        
         protected ReverseAuction() { }
 

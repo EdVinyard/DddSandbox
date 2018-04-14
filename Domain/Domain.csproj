@@ -50,6 +50,7 @@
     <Compile Include="Aggregate\Bid\BidAggregate.cs" />
     <Compile Include="Aggregate\Bid\Event.cs" />
     <Compile Include="Aggregate\Common\Money.cs" />
+    <Compile Include="AssemblyMarker.cs" />
     <Compile Include="Port\IClock.cs" />
     <Compile Include="Port\IDependencies.cs" />
     <Compile Include="Port\IGeocoder.cs" />

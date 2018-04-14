@@ -52,7 +52,7 @@ namespace Domain.Aggregate.Auction
         /// A stateless Domain Service that creates instances of the Address
         /// Domain Entity.
         /// <summary>
-        public class Factory : Service
+        public class Factory : DDD.Factory
         {
             private readonly IGeocoder _geocoder;
 

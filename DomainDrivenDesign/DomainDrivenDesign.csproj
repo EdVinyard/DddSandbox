@@ -44,6 +44,7 @@
     <Compile Include="AggregateRoot.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="Entity.cs" />
+    <Compile Include="Factory.cs" />
     <Compile Include="InterAggregateEvent.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

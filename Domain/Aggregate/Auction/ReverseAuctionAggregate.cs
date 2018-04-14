@@ -40,7 +40,7 @@ namespace Domain.Aggregate.Auction
         /// name scoping and convention make it fairly easy to discover
         /// and use.
         /// </summary>
-        public class Factory : Service
+        public class Factory : DDD.Factory
         {
             private Location.Factory _locationFactory;
             private ReverseAuction.Factory _reverseAuctionFactory;
@@ -187,13 +187,16 @@ namespace Domain.Aggregate.Auction
         {
             private readonly IInterAggregateEventBus _interAggregateEventBus;
             private readonly IClock _clock;
+            private readonly Bid.Bid.Factory _bidFactory;
 
             public _PlaceBid(
                 IInterAggregateEventBus interAggregateEventBus,
-                IClock clock)
+                IClock clock,
+                Bid.Bid.Factory bidFactory)
             {
                 _interAggregateEventBus = interAggregateEventBus;
                 _clock = clock;
+                _bidFactory = bidFactory;
             }
 
             public Bid.BidAggregate PlaceBid(
@@ -221,7 +224,7 @@ namespace Domain.Aggregate.Auction
                     dropoffTime);
                 PriceMustBeNonNegative(price);
 
-                var bid = new Bid.Bid(
+                var bid = _bidFactory.New(
                     reverseAuction.Id,
                     pickupTime,
                     dropoffTime,

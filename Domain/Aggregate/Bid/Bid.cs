@@ -38,29 +38,32 @@ namespace Domain.Aggregate.Bid
             protected set { _price = value; }
         }
 
-        /// <summary>
-        /// For use by ReverseAuction.PlaceBid() factory method ONLY!
-        /// TODO: How can this be hidden better, even from other types 
-        /// in the Domain?
-        /// </summary>
-        internal Bid(
-            int reverseAuctionId,
-            TimeRange pickupTime,
-            TimeRange dropoffTime,
-            Money price)
+        public class Factory : DDD.Factory
         {
-            Precondition.MustNotBeNull(pickupTime, nameof(pickupTime));
-            Precondition.MustNotBeNull(dropoffTime, nameof(dropoffTime));
-            Precondition.MustNotBeNull(price, nameof(price));
+            public Factory() { }
 
-            _reverseAuctionId = reverseAuctionId;
-            _pickupTime = pickupTime;
-            _dropoffTime = dropoffTime;
-            _price = price;
+            public Bid New(
+                int reverseAuctionId,
+                TimeRange pickupTime,
+                TimeRange dropoffTime,
+                Money price)
+            {
+                Precondition.MustNotBeNull(pickupTime, nameof(pickupTime));
+                Precondition.MustNotBeNull(dropoffTime, nameof(dropoffTime));
+                Precondition.MustNotBeNull(price, nameof(price));
+
+                return new Bid
+                {
+                    _reverseAuctionId = reverseAuctionId,
+                    _pickupTime = pickupTime,
+                    _dropoffTime = dropoffTime,
+                    _price = price,
+                };
+            }
         }
 
         /// <summary>
-        /// FOR NHibernate ONLY!
+        /// FOR NHibernate AND Bid.Factory ONLY!
         /// </summary>        
         protected Bid() { }
     }
