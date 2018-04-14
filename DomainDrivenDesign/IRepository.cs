@@ -13,5 +13,7 @@
     /// Provide repositories only for aggregates... 
     /// [Evans, p. 151]
     /// </summary>
-    public interface IRepository { }
+    public interface IRepository : _Marker
+    {
+    }
 }

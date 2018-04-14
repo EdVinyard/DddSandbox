@@ -3,5 +3,7 @@
     /// <summary>
     /// a marker interface to clearly denote Domain Services
     /// <summary>
-    public interface Service { }
+    public interface Service : _Marker
+    {
+    }
 }

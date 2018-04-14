@@ -1,27 +1,11 @@
 ﻿using NUnit.Framework;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace DomainTest
+namespace DomainDrivenDesignTest
 {
-    public static class ReflectionExtensions
-    {
-        public static bool Implements<TBase>(this Type t) =>
-            typeof(TBase).IsAssignableFrom(t);
-    }
-
-    public abstract class DomainTypes : IEnumerable
-    {
-        protected static readonly Type[] AllDomainTypes = typeof(Domain.AssemblyMarker)
-            .Assembly
-            .GetTypes();
-
-        public abstract IEnumerator GetEnumerator();
-    }
-
     [TestFixture]
     public class EntityStructure
     {
@@ -97,16 +81,6 @@ guarantees:
             typeof(object)
             .GetMethods()
             .Select(m => m.Name));
-
-        public class AllDomainEntities : DomainTypes
-        {
-            public override IEnumerator GetEnumerator()
-            {
-                return AllDomainTypes
-                    .Where(t => typeof(DDD.Entity).IsAssignableFrom(t))
-                    .GetEnumerator();
-            }
-        }
 
         private bool IsDddFactory(Type t, object filterCriteria) => 
             t.Implements<DDD.Factory>();
