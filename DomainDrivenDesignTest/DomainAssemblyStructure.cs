@@ -9,11 +9,11 @@ namespace DomainDrivenDesignTest
         [TestCaseSource(typeof(DomainTypes))]
         public void AllTypesInDomainAssemblyMustHaveDddRole(Type t)
         {
-            if (t == typeof(Domain.AssemblyMarker)) Assert.Pass();
-
             Assert.IsTrue(
-                t.Implements<DDD._Marker>()
-                || t.IsDerivedFrom<Exception>(), 
+                t.Implements<DDD.HasState>()
+                || t.Implements<DDD.HasDependencies>()
+                || t.IsDerivedFrom<Exception>()
+                || t == typeof(Domain.AssemblyMarker),
                 @"
 
 All types defined in the Domain project(s) must call out their DDD role by 

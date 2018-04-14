@@ -3,7 +3,7 @@
     /// <summary>
     /// a marker interface to clearly denote Aggregates
     /// <summary>
-    public interface IAggregate : _Marker
+    public interface IAggregate : HasState
     {
     }
 }

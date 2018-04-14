@@ -2,7 +2,7 @@
 
 namespace DDD
 {
-    public abstract class Entity : IEquatable<Entity>, _Marker
+    public abstract class Entity : IEquatable<Entity>, HasState
     {
         public virtual int Id { get; protected set; }
 
