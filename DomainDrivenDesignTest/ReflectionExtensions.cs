@@ -6,5 +6,8 @@ namespace DomainDrivenDesignTest
     {
         public static bool Implements<TBase>(this Type t) =>
             typeof(TBase).IsAssignableFrom(t);
+
+        public static bool IsDerivedFrom<TBase>(this Type t) =>
+            typeof(TBase).IsAssignableFrom(t);
     }
 }

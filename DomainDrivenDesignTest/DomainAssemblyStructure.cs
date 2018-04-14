@@ -6,11 +6,15 @@ namespace DomainDrivenDesignTest
     [TestFixture]
     public class DomainAssemblyStructure
     {
-        [TestCaseSource(typeof(AllDomainTypes))]
+        [TestCaseSource(typeof(DomainTypes))]
         public void AllTypesInDomainAssemblyMustHaveDddRole(Type t)
         {
-            Console.WriteLine(t.FullName);
-            Assert.IsTrue(t.Implements<DDD._Marker>(), @"
+            if (t == typeof(Domain.AssemblyMarker)) Assert.Pass();
+
+            Assert.IsTrue(
+                t.Implements<DDD._Marker>()
+                || t.IsDerivedFrom<Exception>(), 
+                @"
 
 All types defined in the Domain project(s) must call out their DDD role by 
 implemting one of the DDD marker interfaces (e.g., ValueType, Entity, Factory).

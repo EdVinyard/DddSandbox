@@ -13,7 +13,7 @@
     /// way to obtain an instance of this type must ever exist!
     /// </p>
     /// </summary>
-    public interface IDependencies
+    public interface IDependencies : DDD.Port
     {
         T Instance<T>() where T : class;
     }

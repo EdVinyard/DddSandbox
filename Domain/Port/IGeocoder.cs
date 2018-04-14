@@ -2,7 +2,7 @@
 
 namespace Domain.Port
 {
-    public abstract class IGeocoder
+    public abstract class IGeocoder : DDD.Port
     {
         public abstract GeoCoordinate GeoCode(string address);
     }
