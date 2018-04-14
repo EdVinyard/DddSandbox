@@ -12,8 +12,11 @@ namespace DomainDrivenDesignTest
             Assert.IsTrue(
                 t.Implements<DDD.HasState>()
                 || t.Implements<DDD.HasDependencies>()
+
+                // the only two exceptions to the rule
                 || t.IsDerivedFrom<Exception>()
                 || t == typeof(Domain.AssemblyMarker),
+
                 @"
 
 All types defined in the Domain project(s) must call out their DDD role by 
