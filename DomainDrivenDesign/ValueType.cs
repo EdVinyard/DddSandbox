@@ -26,7 +26,7 @@
     // Bounded Context, without "extra" features or functionality 
     // only appropriate in some other Context.
     /// <summary>
-    public interface ValueType : HasState
+    public interface ValueType : _Marker
     {
     }
 }

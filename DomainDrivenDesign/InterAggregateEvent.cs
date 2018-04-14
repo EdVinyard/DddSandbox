@@ -7,7 +7,7 @@ namespace DDD
     /// event" because these events are only propogated from one Aggregate to
     /// another.
     /// </summary>
-    public interface InterAggregateEvent : HasState
+    public interface InterAggregateEvent : _Marker
     {
     }
 

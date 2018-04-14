@@ -3,7 +3,7 @@
     /// <summary>
     /// a marker interface to clearly denote Domain Services
     /// <summary>
-    public interface Service : HasDependencies
+    public interface Service : _Marker
     {
     }
 }

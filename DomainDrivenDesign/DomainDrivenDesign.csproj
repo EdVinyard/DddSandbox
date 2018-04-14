@@ -40,10 +40,9 @@
     <Compile Include="Command.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Factory.cs" />
-    <Compile Include="HasDependencies.cs" />
-    <Compile Include="HasState.cs" />
     <Compile Include="InterAggregateEvent.cs" />
     <Compile Include="IRepository.cs" />
+    <Compile Include="Marker.cs" />
     <Compile Include="Port.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query.cs" />
