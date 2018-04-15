@@ -1,24 +1,36 @@
-﻿using System;
+﻿using Application;
+using System;
+using System.Threading.Tasks;
 using System.Web.Http;
-using UserInterface.Models;
+using Repr = Application.Representation;
 
 namespace UserInterface.Controllers
 {
     public class ReverseAuctionController : ApiController
     {
-        public PaginatedSequence<ReverseAuction> Get()
+        private readonly ReverseAuction.Create _create;
+
+        public ReverseAuctionController(
+            ReverseAuction.Create create)
+        {
+            _create = create;
+        }
+
+        public Repr.PaginatedSequence<Repr.ReverseAuction> Get()
         {
             throw new NotImplementedException();
         }
 
-        public ReverseAuction Get(int id)
+        public Repr.ReverseAuction Get(int id)
         {
             throw new NotImplementedException();
         }
 
-        public IHttpActionResult Post(ReverseAuction newReverseAuction)
+        public IHttpActionResult Post(Repr.ReverseAuction request)
         {
-            throw new NotImplementedException();
+            Repr.ReverseAuction response = _create.From(request);
+
+            return Created(response.Uri, response);
         }
     }
 }

@@ -1,12 +1,24 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
+using System;
 
 namespace UserInterfaceTest
 {
-    [TestClass]
-    public class UnitTest1
+    [TestFixture]
+    public class CreateReverseAuction
     {
-        [TestMethod]
+        [Test]
+        public void DemonstrateThatEachRequestHasDifferentStructureMapNestedContainer()
+        {
+            Assert.Fail("Write this test.");
+        }
+
+        [Test]
+        public void DemonstrateThatEachRequestHasDifferentNHibernateSession()
+        {
+            Assert.Fail("Write this test.");
+        }
+
+        [Test]
         public void WriteMoreTests()
         {
             Assert.Fail("Write more tests.");

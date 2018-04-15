@@ -16,17 +16,4 @@ namespace DDD
         void Subscribe<T>(Action<T> subscriber) where T : InterAggregateEvent;
         void Publish(InterAggregateEvent anEvent);
     }
-
-    public class InterAggregateEventBus : IInterAggregateEventBus
-    {
-        public void Subscribe<T>(Action<T> subscriber) where T : InterAggregateEvent
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Publish(InterAggregateEvent anEvent)
-        {
-            throw new NotImplementedException();
-        }
-    }
 }

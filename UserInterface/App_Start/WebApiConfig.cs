@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using StructureMap;
 using System.Web.Http;
 
 namespace UserInterface
@@ -9,15 +7,17 @@ namespace UserInterface
     {
         public static void Register(HttpConfiguration config)
         {
-            // Web API configuration and services
-
             // Web API routes
             config.MapHttpAttributeRoutes();
 
+            // RULE: No auto-magical default routing!
             config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
+                name: "ReverseAuction",
+                routeTemplate: "ReverseAuction/{id}",
+                defaults: new {
+                    controller = "ReverseAuction",
+                    id = RouteParameter.Optional
+                }
             );
         }
     }

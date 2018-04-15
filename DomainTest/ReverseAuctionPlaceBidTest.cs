@@ -1,5 +1,4 @@
 ﻿using DDD;
-using Domain;
 using Domain.Aggregate.Auction;
 using Domain.Aggregate.Bid.Event;
 using Domain.Aggregate.Common;

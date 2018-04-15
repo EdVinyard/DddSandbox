@@ -1,11 +1,9 @@
 ﻿using DDD;
-using Domain;
 using Domain.Aggregate.Auction;
 using Domain.Aggregate.Common;
 using Domain.Port;
 using NHibernate;
 using NUnit.Framework;
-using Persistence;
 using StructureMap;
 using System;
 using System.Device.Location;
@@ -61,7 +59,6 @@ namespace PersistenceTest
             c.For<IClock>().Use<FakeClock>();
             c.For<IGeocoder>().Use<FakeGeocoder>();
             c.For<IInterAggregateEventBus>().Use<FakeEventBus>();
-            c.For<IReverseAuctionRepository>().Use<ReverseAuctionRepository>();
             c.For<IDependencies>().Use<StructureMapAdapter>();
         }
 

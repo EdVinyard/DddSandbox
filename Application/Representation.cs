@@ -1,18 +1,18 @@
 ﻿using System;
 
-namespace UserInterface.Models
+namespace Application.Representation
 {
     // TODO: Do these DTO definitions belong in the Application layer,
     // because we'd expect them to be shared by different UIs?
-    [Serializable]
-    public class Representation
+    public interface IRepresentation
     {
     }
 
     // Intentionally create mismatches between the shape of these DTOs
     // and the shape of the Domain types.
 
-    public class ReverseAuction : Representation
+    [Serializable]
+    public class ReverseAuction : IRepresentation
     {
         public string Uri;
         public Waypoint Pickup;
@@ -20,7 +20,7 @@ namespace UserInterface.Models
         public string OtherTerms;
 
         /// <summary>
-        /// The first moment in time at which bidding is allowed, expressed as
+        /// The first moment in time at which bidding is allowed, expressed a
         /// an ISO-8601 date-time with a specific offset.
         /// </summary>
         public string BiddingStart;
@@ -37,7 +37,8 @@ namespace UserInterface.Models
         public PaginatedSequence<Bid> Bids;
     }
 
-    public class Waypoint : Representation
+    [Serializable]
+    public class Waypoint : IRepresentation
     {
         /// <summary>
         /// The street or physical address of the location, as a human being
@@ -72,7 +73,7 @@ namespace UserInterface.Models
     }
 
     [Serializable]
-    public class PaginatedSequence<TItem> where TItem : Representation
+    public class PaginatedSequence<TItem> where TItem : IRepresentation
     {
         /// <summary>
         /// the total number of items available
@@ -98,9 +99,13 @@ namespace UserInterface.Models
         /// the URI of the next page
         /// </summary>
         public string NextPageUri;
+
+        public static PaginatedSequence<TItem> Empty =>
+            new PaginatedSequence<TItem>() { TotalCount = 0 };
     }
 
-    public class Bid : Representation
+    [Serializable]
+    public class Bid : IRepresentation
     {
         /// <summary>
         /// The first moment in time at which pickup may occur, expressed as

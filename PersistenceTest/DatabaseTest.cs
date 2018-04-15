@@ -11,9 +11,7 @@ namespace PersistenceTest
         {
             globalContainer = new Container(x =>
             {
-                x.For<NHibernate.ISessionFactory>()
-                    .Use(ctx => Persistence.Config.Database.BuildSessionFactory())
-                    .Singleton();
+                x.AddRegistry<Persistence.DependencyRegistry>();
             });
         }
         /// <summary>
@@ -36,8 +34,7 @@ namespace PersistenceTest
             Container = globalContainer.GetNestedContainer();
             Container.Configure(x =>
             {
-                x.For<NHibernate.ISession>().Use(ctx =>
-                    ctx.GetInstance<NHibernate.ISessionFactory>().OpenSession());
+                x.For<ISession>().Use(c => c.GetInstance<ISessionFactory>().OpenSession());
                 Configure(x);
             });
         }

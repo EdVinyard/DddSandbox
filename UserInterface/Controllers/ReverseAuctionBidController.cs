@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Application.Representation;
+using System;
 using System.Web.Http;
-using UserInterface.Models;
 
 namespace UserInterface.Controllers
 {
