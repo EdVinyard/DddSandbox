@@ -1,5 +1,6 @@
 <img src="ProjectDependencies.png" 
     style="float:right;margin-left:1em" 
+    align="right"
     alt="simplified project dependencies"
     />
 <!-- 
