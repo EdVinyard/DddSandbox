@@ -12,7 +12,8 @@ namespace DomainDrivenDesignTest
             if (t == typeof(Domain.AssemblyMarker)) Assert.Pass();
 
             Assert.IsTrue(
-                t.Implements<DDD._Marker>()
+                t.Implements<DDD.HasState>()
+                || t.Implements<DDD.HasDependencies>()
                 || t.IsDerivedFrom<Exception>(), 
                 @"
 
