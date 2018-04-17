@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using System.Reflection;
 
 namespace DomainDrivenDesignTest
 {
@@ -24,6 +25,19 @@ namespace DomainDrivenDesignTest
             .ToArray();
 
         public IEnumerator GetEnumerator() => Entities.GetEnumerator();
+    }
+
+    public class AllDomainEntityProperties : IEnumerable
+    {
+        internal static readonly PropertyInfo[] Properties =
+            AllDomainEntities.Entities
+            .SelectMany(t => t.GetProperties(
+                BindingFlags.Instance
+                | BindingFlags.Public
+                | BindingFlags.NonPublic))
+            .ToArray();
+
+        public IEnumerator GetEnumerator() => Properties.GetEnumerator();
     }
 
     public class AllDomainValueTypes : IEnumerable

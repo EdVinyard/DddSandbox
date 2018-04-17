@@ -85,10 +85,43 @@ guarantees:
         private bool IsDddFactory(Type t, object filterCriteria) => 
             t.Implements<DDD.Factory>();
 
-        [Test]
-        public void MustNotHavePublicSetters()
+        [TestCaseSource(typeof(AllDomainEntityProperties))]
+        public void MustNotHavePublicSetters(PropertyInfo property)
         {
-            Assert.Fail("Write this test.");
+            var rule = $@"
+
+The {property.DeclaringType}.{property.Name} setter must NOT be public.
+
+Domain Entities may expose public getters, but should allow mutation
+only through methods.  For example, instead of exposing a public
+property setter for a 'Deleted' flag, instead expose a public method
+named 'Delete()'.  Although *exactly* the same work can be accomplished
+in either case, this convention encourages us to conceptualize compound 
+or complex operations as *controlled* by the Domain Entity, and distinct
+from the simple data owned by the entity.
+
+For example, prefer client code that looks like this:
+
+    widget.Delete();
+
+Avoid client code that directly manipulates properties that should 
+be kept in sync like this:
+
+    widget.Deleted = true;
+    widget.DateUpdated = clock.Now;
+
+            ";
+
+            var setter = property.GetSetMethod(nonPublic: true);
+
+            if (setter == null)
+            {
+                Assert.Pass("no setter defined");
+            }
+            else
+            {
+                Assert.IsFalse(setter.IsPublic, rule);
+            }
         }
     }
 }

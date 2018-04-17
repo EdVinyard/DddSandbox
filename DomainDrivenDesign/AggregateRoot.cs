@@ -2,6 +2,6 @@
 {
     public class AggregateRoot : Entity
     {
-        public virtual int Version { get; set; }
+        public virtual int Version { get; protected set; }
     }
 }
