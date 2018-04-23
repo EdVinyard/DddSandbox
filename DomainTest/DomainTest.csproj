@@ -51,6 +51,7 @@
     <Compile Include="DomainTest.cs" />
     <Compile Include="MoneyConstructorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReverseAuctionAlterPickupTest.cs" />
     <Compile Include="ReverseAuctionPlaceBidTest.cs" />
     <Compile Include="TimeRangeConstructorTest.cs" />
     <Compile Include="TimeRangeIncludesTimeRangeTest.cs" />

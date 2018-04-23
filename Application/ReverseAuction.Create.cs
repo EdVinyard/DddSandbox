@@ -7,7 +7,7 @@ using System;
 namespace Application
 {
     // TODO: Is this the concrete form of a Resource?
-    public static class ReverseAuction
+    public static partial class ReverseAuction
     {
         public class Create : ApplicationService
         {
@@ -41,15 +41,14 @@ namespace Application
                 // TODO: Translate from Domain-oriented errors to UI-oriented errors.
                 return _factory.New(
                     repr.Pickup.Address,
-                    ToTimeRange(repr.Pickup),
+                    Convert.FromRepr(repr.Pickup),
                     repr.Dropoff.Address,
-                    ToTimeRange(repr.Dropoff),
+                    Convert.FromRepr(repr.Dropoff),
                     repr.OtherTerms,
-                    ToTimeRange(repr.BiddingStart, repr.BiddingEnd));
+                    Convert.ToTimeRange(repr.BiddingStart, repr.BiddingEnd));
             }
 
-            private Repr.ReverseAuction ToRepresentation(
-                ReverseAuctionAggregate auction)
+            private Repr.ReverseAuction ToRepresentation(ReverseAuctionAggregate auction)
             {
                 auction.MustNotBeNull(nameof(auction));
 
@@ -59,41 +58,11 @@ namespace Application
                     BiddingStart = auction.BiddingAllowed.Start.ToIso8601(),
                     BiddingEnd = auction.BiddingAllowed.End.ToIso8601(),
                     Bids = Repr.PaginatedSequence<Repr.Bid>.Empty,
-                    Pickup = ToRepr(auction.BuyerTerms.Pickup),
-                    Dropoff = ToRepr(auction.BuyerTerms.Dropoff),
+                    Pickup = Convert.ToRepr(auction.BuyerTerms.Pickup),
+                    Dropoff = Convert.ToRepr(auction.BuyerTerms.Dropoff),
                     OtherTerms = auction.BuyerTerms.OtherTerms,
                 };
             }
-
-            private static TimeRange ToTimeRange(Repr.Waypoint w)
-            {
-                w.MustNotBeNull(nameof(w));
-
-                return ToTimeRange(w.Earliest, w.Latest);
-            }
-
-            private static TimeRange ToTimeRange(string startIso8601, string endIso8601)
-            {
-                startIso8601.MustNotBeNull(nameof(startIso8601));
-                endIso8601.MustNotBeNull(nameof(endIso8601));
-
-                // TODO: Translate from Domain-oriented errors to UI-oriented errors.
-
-                // TODO: Push this all down into a new TimeRange constructor.
-                var start = DateTimeOffset.Parse(startIso8601);
-                var end = DateTimeOffset.Parse(endIso8601);
-                var duration = end - start;
-                return new TimeRange(start, duration);
-            }
-
-            private static Repr.Waypoint ToRepr(Waypoint w) => new Repr.Waypoint
-            {
-                Address   = w.Place.Address,
-                Latitude  = w.Place.Coordinates.Latitude,
-                Longitude = w.Place.Coordinates.Longitude,
-                Earliest  = w.Time.Start.ToIso8601(),
-                Latest    = w.Time.End.ToIso8601(),
-            };
         }
     }
 }

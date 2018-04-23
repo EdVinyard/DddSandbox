@@ -17,7 +17,7 @@ namespace Application
         /// Never returns latitude or longitude values that are zero, 
         /// for ease of testing.
         /// </summary>
-        public override GeoCoordinate GeoCode(string address)
+        public GeoCoordinate GeoCode(string address)
         {
             GeoCoordinate coordinate;
             var cacheKey = ToKey(address);

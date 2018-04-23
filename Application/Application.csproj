@@ -44,8 +44,10 @@
   <ItemGroup>
     <Compile Include="ApplicationService.cs" />
     <Compile Include="Clock.cs" />
+    <Compile Include="Convert.cs" />
     <Compile Include="FakeEventBus.cs" />
     <Compile Include="FakeGeocoder.cs" />
+    <Compile Include="ReverseAuction.AlterPickup.cs" />
     <Compile Include="ReverseAuction.Create.cs" />
     <Compile Include="DependencyRegistry.cs" />
     <Compile Include="IUriScheme.cs" />
@@ -75,5 +77,6 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

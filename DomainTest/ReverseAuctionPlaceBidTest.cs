@@ -15,10 +15,10 @@ namespace DomainTest
     [TestFixture]
     public class ReverseAuctionPlaceBidTest : DomainTest
     {
-        public class FakeGeocoder : IGeocoder
+        public class RandomGeocoder : IGeocoder
         {
             private static readonly Random _prng = new Random();
-            public override GeoCoordinate GeoCode(string address)
+            public GeoCoordinate GeoCode(string address)
             {
                 return new GeoCoordinate()
                 {
@@ -61,7 +61,7 @@ namespace DomainTest
         protected override void Configure(ConfigurationExpression c)
         {
             c.For<IClock>().Use<FakeClock>();
-            c.For<IGeocoder>().Use<FakeGeocoder>();
+            c.For<IGeocoder>().Use<RandomGeocoder>();
             c.For<IInterAggregateEventBus>().Use<FakeEventBus>();
         }
 
