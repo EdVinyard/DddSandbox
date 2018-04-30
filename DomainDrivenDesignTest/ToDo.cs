@@ -2,7 +2,12 @@
 
 namespace DomainDrivenDesignTest
 {
-    public abstract class ToDo { [Test] public void WriteMoreTests() { Assert.Fail("Write more tests."); } }
+    public abstract class ToDo {
+        [Test]
+        [Ignore("Write more tests.")]
+        public void WriteMoreTests() { Assert.Fail("Write more tests."); }
+    }
+
     [TestFixture] public class AggregateRootStructure : ToDo { }
     [TestFixture] public class AggregateStructure : ToDo { }
     [TestFixture] public class FactoryStructure : ToDo { }

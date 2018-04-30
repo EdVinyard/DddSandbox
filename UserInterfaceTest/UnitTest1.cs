@@ -7,21 +7,24 @@ namespace UserInterfaceTest
     public class CreateReverseAuction
     {
         [Test]
+        [Ignore("Write this test.")]
         public void DemonstrateThatEachRequestHasDifferentStructureMapNestedContainer()
         {
-            Assert.Fail("Write this test.");
+            // TODO: Write this test.
         }
 
         [Test]
+        [Ignore("Write this test.")]
         public void DemonstrateThatEachRequestHasDifferentNHibernateSession()
         {
-            Assert.Fail("Write this test.");
+            // TODO: Write this test.
         }
 
         [Test]
+        [Ignore("Write more tests.")]
         public void WriteMoreTests()
         {
-            Assert.Fail("Write more tests.");
+            // TODO: Write more tests.
         }
     }
 }

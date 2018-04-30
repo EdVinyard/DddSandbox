@@ -58,7 +58,7 @@ namespace DomainTest
             }
         }
 
-        protected override void Configure(ConfigurationExpression c)
+        protected override void ArrangeDependencies(ConfigurationExpression c)
         {
             c.For<IClock>().Use<FakeClock>();
             c.For<IGeocoder>().Use<RandomGeocoder>();

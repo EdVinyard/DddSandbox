@@ -48,6 +48,7 @@
     <Reference Include="System.Device" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BidWithdrawTest.cs" />
     <Compile Include="DomainTest.cs" />
     <Compile Include="MoneyConstructorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

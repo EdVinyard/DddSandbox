@@ -28,4 +28,13 @@ namespace Domain.Aggregate.Bid.Event
             Price = x.Root.Price;
         }
     }
+
+    public class BidWithdrawn : BidEvent
+    {
+        public Money Price { get; }
+        internal BidWithdrawn(BidAggregate x) : base(x)
+        {
+            Price = x.Root.Price;
+        }
+    }
 }

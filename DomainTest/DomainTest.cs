@@ -43,9 +43,9 @@ namespace DomainTest
         public void PerTestSetUp()
         {
             Container = globalContainer.GetNestedContainer();
-            Container.Configure(Configure);
+            Container.Configure(ArrangeDependencies);
         }
 
-        protected abstract void Configure(ConfigurationExpression x);
+        protected abstract void ArrangeDependencies(ConfigurationExpression x);
     }
 }
