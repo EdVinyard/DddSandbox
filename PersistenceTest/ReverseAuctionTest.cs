@@ -51,7 +51,7 @@ namespace PersistenceTest
         {
             private readonly IContainer c;
             public StructureMapAdapter(IContainer c) { this.c = c; }
-            public T Instance<T>() where T : class => c.GetInstance<T>();
+            public T Instance<T>() where T : DDD.HasDependencies => c.GetInstance<T>();
         }
 
         protected override void Configure(ConfigurationExpression c)

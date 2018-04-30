@@ -15,6 +15,6 @@
     /// </summary>
     public interface IDependencies : DDD.Port
     {
-        T Instance<T>() where T : class;
+        T Instance<T>() where T : DDD.HasDependencies;
     }
 }

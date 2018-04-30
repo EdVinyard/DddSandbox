@@ -113,7 +113,8 @@ namespace ApplicationTest.ReverseAuctionTest
                     var locations = string.Join(", ", this.Keys);
                     throw new ArgumentException(
                         $"FakeGeocoder failed to geocode '{address}'; " +
-                        $"it only knows about {locations}.");
+                        $"it only knows about {locations}.", 
+                        ex);
                 }
             }
         }

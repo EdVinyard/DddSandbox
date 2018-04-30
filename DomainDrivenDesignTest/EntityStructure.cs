@@ -44,30 +44,33 @@ guarantees:
         [TestCaseSource(typeof(AllDomainEntities))]
         public void MustBeConstructedByNestedFactoryClass(Type entityType)
         {
-            Type entityFactoryType = null;
-            Assert.DoesNotThrow(() => {
-                entityFactoryType = entityType
-                    .GetNestedTypes()
-                    .Single(c => c.Name == "Factory");
-                },
-                $"{entityType.Name} must have a nested class named 'Factory'.");
-
-            Assert.DoesNotThrow(() => entityFactoryType
-                .FindInterfaces(IsDddFactory, null)
-                .Single(),
-                $"{entityType.Name}.Factory must implement DDD.Factory.");
-
-            var publicFactoryMethods = PublicMethods(entityFactoryType);
-            Assert.Greater(publicFactoryMethods.Count(), 0,
-                $"{entityType.Name}.Factory must have at least one method named 'New'.");
-
-            foreach (var m in publicFactoryMethods)
+            Assert.Multiple(() =>
             {
-                Assert.AreEqual("New", m.Name);
-                Assert.AreSame(entityType, m.ReturnType,
-                    $"Public method {entityType.Name}.Factory.{m.Name} " +
-                    $"must return {entityType.Name}.");
-            }
+                Type entityFactoryType = null;
+                Assert.DoesNotThrow(() => {
+                    entityFactoryType = entityType
+                        .GetNestedTypes()
+                        .Single(c => c.Name == "Factory");
+                },
+                    $"{entityType.Name} must have a nested class named 'Factory'.");
+
+                Assert.DoesNotThrow(() => entityFactoryType
+                    .FindInterfaces(IsDddFactory, null)
+                    .Single(),
+                    $"{entityType.Name}.Factory must implement DDD.Factory.");
+
+                var publicFactoryMethods = PublicMethods(entityFactoryType);
+                Assert.Greater(publicFactoryMethods.Count(), 0,
+                    $"{entityType.Name}.Factory must have at least one method named 'New'.");
+
+                foreach (var m in publicFactoryMethods)
+                {
+                    Assert.AreEqual("New", m.Name);
+                    Assert.AreSame(entityType, m.ReturnType,
+                        $"Public method {entityType.Name}.Factory.{m.Name} " +
+                        $"must return {entityType.Name}.");
+                }
+            });
         }
 
         public IEnumerable<MethodInfo> PublicMethods(Type t)
