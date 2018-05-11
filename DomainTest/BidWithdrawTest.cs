@@ -29,15 +29,19 @@ namespace DomainTest
         {
             // Arrange
             var bid = NewBid();
-            Assert.IsTrue(bid.IsTendered);
-            Assert.IsFalse(bid.IsWithdrawn);
+            Assert.IsTrue(bid.IsTendered,
+                "prior to withdrawal, Bid should be tendered");
+            Assert.IsFalse(bid.IsWithdrawn,
+                "prior to withdrawal, Bid should NOT be withdrawn");
 
             // Act
-            bid.Withdraw();
+            bid.WithdrawNow(Container.GetInstance<IDependencies>());
 
             // Assert
-            Assert.IsTrue(bid.IsWithdrawn);
-            Assert.IsFalse(bid.IsWithdrawn);
+            Assert.IsTrue(bid.IsWithdrawn,
+                "after withdrawal, Bid should be withdrawn");
+            Assert.IsFalse(bid.IsTendered,
+                "after withdrawal, Bid should NOT be tendered");
         }
 
         [Test]
@@ -51,9 +55,10 @@ namespace DomainTest
             // Arrange
             var bid = NewBid();
             var bus = (FakeEventBus)Container.GetInstance<IInterAggregateEventBus>();
+            bus.EventLog.Clear();
 
             // Act
-            bid.Withdraw();
+            bid.WithdrawNow(Container.GetInstance<IDependencies>());
 
             // Assert
             var lastEvent = bus.EventLog.Last();
@@ -69,17 +74,17 @@ namespace DomainTest
         {
             // Arrange
             var bid = NewBid();
-            bid.Withdraw();
+            bid.WithdrawNow(Container.GetInstance<IDependencies>());
 
             Assert.IsTrue(bid.IsWithdrawn);
-            Assert.IsFalse(bid.IsWithdrawn);
+            Assert.IsFalse(bid.IsTendered);
 
             // Act
-            bid.Withdraw();
+            bid.WithdrawNow(Container.GetInstance<IDependencies>());
 
             // Assert
             Assert.IsTrue(bid.IsWithdrawn);
-            Assert.IsFalse(bid.IsWithdrawn);
+            Assert.IsFalse(bid.IsTendered);
         }
 
         [Test]
@@ -88,14 +93,14 @@ namespace DomainTest
             // Arrange
             var bus = (FakeEventBus)Container.GetInstance<IInterAggregateEventBus>();
             var bid = NewBid();
-            bid.Withdraw();
+            bid.WithdrawNow(Container.GetInstance<IDependencies>());
             bus.EventLog.Clear();
 
             // Act
-            bid.Withdraw();
+            bid.WithdrawNow(Container.GetInstance<IDependencies>());
 
             // Assert
-            Assert.IsTrue(bus.EventLog.IsEmpty());
+            Assert.IsEmpty(bus.EventLog);
         }
 
         private BidAggregate NewBid()

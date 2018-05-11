@@ -57,10 +57,17 @@ namespace Persistence
         public BidMap()
         {
             Id(x => x.Id);
+
+            OptimisticLock.Version();
+            Version(x => x.Version)
+                .Not.Nullable()
+                .UnsavedValue("0");
+
             Map(x => x.ReverseAuctionId);
             Component(x => x.PickupTime).ColumnPrefix("PickupTime_");
             Component(x => x.DropoffTime).ColumnPrefix("DropoffTime_");
             Component(x => x.Price).ColumnPrefix("Price_");
+            Map(x => x.WithdrawalDate);
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using DDD;
 using Domain.Aggregate.Common;
+using Domain.Port;
 using System;
 
 namespace Domain.Aggregate.Bid
@@ -14,8 +15,8 @@ namespace Domain.Aggregate.Bid
         public int Id => Root.Id;
 
         public Money Price => Root.Price;
-        public bool IsTendered => throw new NotImplementedException();
-        public bool IsWithdrawn => throw new NotImplementedException();
+        public bool IsTendered => Root.IsTendered;
+        public bool IsWithdrawn => Root.IsWithdrawn;
 
         /// <summary>
         /// Withdraw a bid that was tendered.  The bidder is no longer
@@ -23,12 +24,32 @@ namespace Domain.Aggregate.Bid
         /// This operation is idempotent, and does not throw if the
         /// bid has already been withdrawn.
         /// </summary>
-        public void Withdraw()
+        public void WithdrawNow(IDependencies deps)
         {
-            throw new NotImplementedException();
-            // 1. if the bid was already cancelled, return
-            // 2. cancel the bid; save it
-            // 3. publish BidWithdrawnEvent
+            deps.Instance<_WithdrawNow>()
+                .WithdrawNow(this);
+        }
+
+        private class _WithdrawNow : ICommand
+        {
+            private readonly IDependencies _deps;
+            private readonly IInterAggregateEventBus _bus;
+
+            public _WithdrawNow(
+                IDependencies deps,
+                IInterAggregateEventBus bus)
+            {
+                _deps = deps;
+                _bus = bus;
+            }
+
+            public void WithdrawNow(BidAggregate agg)
+            {
+                if (agg.IsWithdrawn) return;
+
+                agg.Root.WithdrawNow(_deps);
+                _bus.Publish(new Event.BidWithdrawn(agg));
+            }
         }
 
         /// <summary>

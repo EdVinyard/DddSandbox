@@ -1,43 +1,25 @@
 ﻿using DDD;
 using Domain.Aggregate.Common;
+using Domain.Port;
 using Framework;
+using System;
 
 namespace Domain.Aggregate.Bid
 {
     public class Bid : AggregateRoot
     {
-        private int _reverseAuctionId;
-
         /// <summary>
         /// Aggregates refer to other Aggregates by identifier only,
         /// not by containment or direct reference.
         /// </summary>
-        public virtual int ReverseAuctionId
-        {
-            get { return _reverseAuctionId; }
-            protected set { _reverseAuctionId = value; }
-        }
+        public virtual int ReverseAuctionId { get; protected set; }
+        public virtual TimeRange PickupTime { get; protected set; }
+        public virtual TimeRange DropoffTime { get; protected set; }
+        public virtual Money Price { get; protected set; }
 
-        private TimeRange _pickupTime;
-        public virtual TimeRange PickupTime
-        {
-            get { return _pickupTime; }
-            protected set { _pickupTime = value; }
-        }
-
-        private TimeRange _dropoffTime;
-        public virtual TimeRange DropoffTime
-        {
-            get { return _dropoffTime; }
-            protected set { _dropoffTime = value; }
-        }
-
-        private Money _price;
-        public virtual Money Price
-        {
-            get { return _price; }
-            protected set { _price = value; }
-        }
+        public virtual bool IsTendered => !WithdrawalDate.HasValue;
+        public virtual bool IsWithdrawn => !IsTendered;
+        public virtual DateTimeOffset? WithdrawalDate { get; protected set; }
 
         public class Factory : DDD.Factory
         {
@@ -55,10 +37,10 @@ namespace Domain.Aggregate.Bid
 
                 return new Bid
                 {
-                    _reverseAuctionId = reverseAuctionId,
-                    _pickupTime = pickupTime,
-                    _dropoffTime = dropoffTime,
-                    _price = price,
+                    ReverseAuctionId = reverseAuctionId,
+                    PickupTime = pickupTime,
+                    DropoffTime = dropoffTime,
+                    Price = price,
                 };
             }
         }
@@ -67,5 +49,24 @@ namespace Domain.Aggregate.Bid
         /// FOR NHibernate AND Bid.Factory ONLY!
         /// </summary>        
         protected Bid() { }
+
+        /// <summary>
+        /// for Aggregate use only
+        /// </summary>
+        protected internal virtual void WithdrawNow(IDependencies deps)
+        {
+            if (IsTendered)
+            {
+                deps.Instance<_WithdrawNow>()
+                    .WithdrawNow(this);
+            }
+        }
+
+        private class _WithdrawNow : ICommand
+        {
+            private readonly IClock _clock;
+            public _WithdrawNow(IClock c) { _clock = c; }
+            public void WithdrawNow(Bid b) { b.WithdrawalDate = _clock.Now; }
+        }
     }
 }
